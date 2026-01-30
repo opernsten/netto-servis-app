@@ -1,0 +1,1 @@
+INSERT INTO "public"."job_machines" ("id", "job_id", "machine_id", "report", "work_hours", "is_done") VALUES ('cb615ce9-a667-4425-811e-4d02f29e98a8', '1fed921d-890c-4267-a841-813899b3ad54', '692d9420-7a89-48bd-863c-e1ada43224ee', 'test', '2.0', 'true');
