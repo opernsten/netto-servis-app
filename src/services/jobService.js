@@ -67,23 +67,62 @@ export const getJobById = async (id) => {
       *,
       customers (*),
       job_machines (
+        id,
+        report,
+        work_hours,
+        is_done,
         machines (*)
       )
     `)
     .eq('id', id)
     .single();
 
-  if (error) {
-    console.error('Chyba při načítání detailu zakázky:', error);
-    throw error;
-  }
+  if (error) throw error;
   
-  // Supabase vrací strukturu: job.job_machines[0].machines...
-  // My to pro React chceme zjednodušit na: job.machines = [stroj1, stroj2]
+  // Přeformátujeme data, aby se s nimi lépe pracovalo
+  // Výsledek: job.machines bude pole, kde každý prvek má info o stroji I O REPORTU
   const formattedData = {
     ...data,
-    machines: data.job_machines.map(item => item.machines)
+    machines: data.job_machines.map(item => ({
+      ...item.machines,        // Data stroje (name, serial...)
+      link_id: item.id,        // ID vazby (důležité pro update)
+      report: item.report,     // Popis opravy
+      machine_work_hours: item.work_hours, // Hodiny na stroji
+      is_done: item.is_done    // Jestli je hotovo
+    }))
   };
 
   return formattedData;
+};
+
+// 5. Uložení reportu ke konkrétnímu stroji v zakázce
+export const updateMachineReport = async (linkId, reportData) => {
+  const { error } = await supabase
+    .from('job_machines')
+    .update({
+      report: reportData.report,
+      work_hours: reportData.work_hours,
+      is_done: true // Označíme jako hotové
+    })
+    .eq('id', linkId);
+
+  if (error) throw error;
+};
+
+// ... existující kód ...
+
+// 4. Aktualizace zakázky (např. při dokončení)
+export const updateJob = async (id, updates) => {
+  const { data, error } = await supabase
+    .from('jobs')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Chyba při aktualizaci zakázky:', error);
+    throw error;
+  }
+  return data;
 };
