@@ -31,16 +31,15 @@ const Sidebar = () => {
           <span>Zákazníci</span>
         </Link>
         
-        {/* Zatím neaktivní odkazy, jen pro vzhled */}
-        <div className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg cursor-pointer transition-colors">
+        <Link to="/machines" className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg cursor-pointer transition-colors">
           <Wrench size={20} />
           <span>Stroje</span>
-        </div>
-
-        <div className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg cursor-pointer transition-colors">
+        </Link>
+        
+        <Link to="/jobs" className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg cursor-pointer transition-colors">
           <FileText size={20} />
           <span>Zakázky</span>
-        </div>
+        </Link>
       </nav>
       
       <div className="p-4 border-t border-slate-800">
