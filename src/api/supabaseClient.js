@@ -1,10 +1,19 @@
 /**
  * @module supabaseClient
  * @description Inicializace instance Supabase klienta.
- * Slouží jako jediný přístupový bod pro komunikaci s backendem (databází a auth).
- * Načítá konfigurační klíče z .env souboru.
+ * Načítá tajné klíče z souboru .env a vytváří spojení.
  */
 
-// import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js';
 
-export const supabase = null; // TODO: Initialize with env variables
+// Načtení proměnných prostředí (z .env souboru)
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+// Kontrola, zda klíče existují (pro debugování)
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('CHYBA: Chybí Supabase URL nebo Anon Key v .env souboru!');
+}
+
+// Vytvoření a export klienta
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);

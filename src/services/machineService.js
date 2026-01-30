@@ -1,11 +1,33 @@
 /**
  * @module machineService
- * @description Datová vrstva pro entitu Stroj.
- * Zajišťuje načítání strojů, filtrování podle zákazníka a zápis nových strojů.
+ * @description Komunikace s databází pro tabulku 'machines'.
  */
 
 import { supabase } from '../api/supabaseClient';
 
+// 1. Získání všech strojů (včetně jména zákazníka)
 export const getMachines = async () => {
-  // TODO: Implement fetch
+  const { data, error } = await supabase
+    .from('machines')
+    .select('*, customers(name, address)') // Tady děláme "JOIN" - vytáhneme i data zákazníka
+    .order('created_at', { ascending: false });
+  
+  if (error) {
+    console.error('Chyba při načítání strojů:', error);
+    throw error;
+  }
+  
+  return data;
+};
+
+// 2. Vytvoření stroje
+export const createMachine = async (machineData) => {
+  const { data, error } = await supabase
+    .from('machines')
+    .insert([machineData])
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
 };

@@ -1,12 +1,33 @@
 /**
  * @module customerService
- * @description Datová vrstva (Data Access Layer) pro entitu Zákazník.
- * Obsahuje asynchronní funkce pro CRUD operace (get, insert, update, delete).
- * Vrací surová data nebo chyby přímo ze Supabase. Neobsahuje React logiku.
+ * @description Komunikace s databází pro tabulku 'customers'.
  */
 
 import { supabase } from '../api/supabaseClient';
 
+// 1. Získání všech zákazníků
 export const getCustomers = async () => {
-  // TODO: Implement fetch
+  const { data, error } = await supabase
+    .from('customers')      // Z tabulky 'customers'
+    .select('*')            // Vyber všechny sloupce
+    .order('name');         // Seřaď podle abecedy
+  
+  if (error) {
+    console.error('Chyba při načítání zákazníků:', error);
+    throw error;
+  }
+  
+  return data;
+};
+
+// 2. Vytvoření nového zákazníka (to použijeme později)
+export const createCustomer = async (customerData) => {
+  const { data, error } = await supabase
+    .from('customers')
+    .insert([customerData])
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
 };
