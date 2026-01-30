@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Calendar, AlertCircle, CheckCircle2, Clock } from 'lucide-react';
 import { formatDate } from '../../utils/dateUtils';
+import { Link } from 'react-router-dom';
 
 const getStatusBadge = (status) => {
   switch (status) {
@@ -85,9 +86,12 @@ const JobTable = ({ jobs, loading }) => {
 
               {/* AKCE */}
               <td className="px-6 py-4 text-right">
-                <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                <Link 
+                  to={`/jobs/${job.id}`} 
+                  className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                > 
                   Detail
-                </button>
+                </Link>
               </td>
             </tr>
           ))}

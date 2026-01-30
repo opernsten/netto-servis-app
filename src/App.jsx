@@ -7,6 +7,7 @@ import Login from './pages/auth/Login';
 import CustomerList from './pages/customers/CustomerList';
 import MachineList from './pages/machines/MachineList'; 
 import JobList from './pages/jobs/JobList';
+import JobDetail from './pages/jobs/JobDetail';
 
 function App() {
   const { user } = useAuth();
@@ -29,6 +30,7 @@ function App() {
           <Route path="/customers" element={<CustomerList />} />
           <Route path="/machines" element={<MachineList />} />
           <Route path="/jobs" element={<JobList />} />
+          <Route path="/jobs/:id" element={<JobDetail />} />
         </Routes>
       </main>
     </div>

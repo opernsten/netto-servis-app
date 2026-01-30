@@ -56,3 +56,34 @@ export const createJob = async (jobData, machineIds) => {
 
   return job;
 };
+
+// ... existující kód ...
+
+// 3. Získání detailu jedné zakázky (včetně zákazníka a strojů)
+export const getJobById = async (id) => {
+  const { data, error } = await supabase
+    .from('jobs')
+    .select(`
+      *,
+      customers (*),
+      job_machines (
+        machines (*)
+      )
+    `)
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    console.error('Chyba při načítání detailu zakázky:', error);
+    throw error;
+  }
+  
+  // Supabase vrací strukturu: job.job_machines[0].machines...
+  // My to pro React chceme zjednodušit na: job.machines = [stroj1, stroj2]
+  const formattedData = {
+    ...data,
+    machines: data.job_machines.map(item => item.machines)
+  };
+
+  return formattedData;
+};
