@@ -31,3 +31,14 @@ export const createMachine = async (machineData) => {
   if (error) throw error;
   return data;
 };
+
+// 3. Získání strojů pouze pro jednoho konkrétního zákazníka
+export const getMachinesByCustomer = async (customerId) => {
+  const { data, error } = await supabase
+    .from('machines')
+    .select('*')
+    .eq('customer_id', customerId); // Filtr: Kde customer_id se rovná tomu, co hledáme
+    
+  if (error) throw error;
+  return data;
+};
