@@ -5,6 +5,8 @@ import { formatDate } from '../../utils/dateUtils';
 import MachineReportModal from '../../modals/jobs/MachineReportModal'; // <--- Modál pro stroj
 import FinalizeJobModal from '../../modals/jobs/FinalizeJobModal';     // <--- Modál pro finále
 import { ArrowLeft, Building2, Calendar, Wrench, CheckCircle2, Clock, Car, Edit3 } from 'lucide-react';
+import { generateServicePDF } from '../../utils/pdfGenerator';
+import { FileDown } from 'lucide-react'; // Ikona stahování
 
 const JobDetail = () => {
   const { id } = useParams();
@@ -41,9 +43,26 @@ const JobDetail = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-24">
       
-      <button onClick={() => navigate('/jobs')} className="flex items-center gap-2 text-slate-500 hover:text-slate-800">
-        <ArrowLeft size={20} /> Zpět na seznam
-      </button>
+      <div className="flex justify-between items-center">
+        <button 
+            onClick={() => navigate('/jobs')}
+            className="flex items-center gap-2 text-slate-500 hover:text-slate-800 transition-colors"
+        >
+            <ArrowLeft size={20} />
+            Zpět na seznam
+        </button>
+
+        {/* Tlačítko pro PDF - Zobrazí se jen pokud je HOTOVO */}
+        {job.status === 'hotovo' && (
+            <button
+                onClick={() => generateServicePDF(job)}
+                className="flex items-center gap-2 bg-slate-800 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors shadow-sm"
+            >
+                <FileDown size={18} />
+                Stáhnout protokol
+            </button>
+        )}
+    </div>
 
       {/* HLAVIČKA */}
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
