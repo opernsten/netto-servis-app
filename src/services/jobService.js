@@ -70,6 +70,7 @@ export const getJobById = async (id) => {
         id,
         report,
         work_hours,
+        completed_at,
         is_done,
         machines (*)
       )
@@ -88,7 +89,7 @@ export const getJobById = async (id) => {
       link_id: item.id,        // ID vazby (důležité pro update)
       report: item.report,     // Popis opravy
       machine_work_hours: item.work_hours, // Hodiny na stroji
-      is_done: item.is_done    // Jestli je hotovo
+      is_done: !!item.completed_at || item.is_done    // Jestli je hotovo
     }))
   };
 
@@ -96,20 +97,35 @@ export const getJobById = async (id) => {
 };
 
 // 5. Uložení reportu ke konkrétnímu stroji v zakázce
-export const updateMachineReport = async (linkId, reportData) => {
-  const { error } = await supabase
+// Aktualizace reportu stroje (včetně náhradních dílů)
+export const updateMachineReport = async (jobMachineId, reportText, parts = []) => {
+  // 1. Uložíme text reportu a nastavíme completed_at
+  const { error: updateError } = await supabase
     .from('job_machines')
-    .update({
-      report: reportData.report,
-      work_hours: reportData.work_hours,
-      is_done: true // Označíme jako hotové
+    .update({ 
+      report: reportText,
+      completed_at: new Date().toISOString() // Označíme jako hotové
     })
-    .eq('id', linkId);
+    .eq('id', jobMachineId);
 
-  if (error) throw error;
+  if (updateError) throw updateError;
+
+  // 2. Pokud jsou vyplněné díly, uložíme je do vedlejší tabulky
+  if (parts.length > 0) {
+    const partsToInsert = parts.map(p => ({
+      job_machine_id: jobMachineId,
+      article_number: p.article_number,
+      description: p.description,
+      quantity: parseInt(p.quantity, 10)
+    }));
+
+    const { error: partsError } = await supabase
+      .from('job_machine_parts')
+      .insert(partsToInsert);
+
+    if (partsError) throw partsError;
+  }
 };
-
-// ... existující kód ...
 
 // 4. Aktualizace zakázky (např. při dokončení)
 export const updateJob = async (id, updates) => {

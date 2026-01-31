@@ -158,9 +158,6 @@ const JobDetail = () => {
                       <div className="mt-2 text-sm text-slate-700 bg-white p-2 rounded border border-green-100 shadow-sm">
                         <p className="font-medium text-green-800 text-xs uppercase mb-1">Provedená práce:</p>
                         {machine.report}
-                        <div className="mt-1 text-slate-500 text-xs font-bold flex items-center gap-1">
-                          <Clock size={12}/> {machine.machine_work_hours} hod
-                        </div>
                       </div>
                     )}
                   </div>
@@ -224,8 +221,8 @@ const JobDetail = () => {
           onClose={() => setSelectedMachine(null)}
           onSuccess={loadJob}
           machineName={selectedMachine.name}
-          linkId={selectedMachine.link_id}
-          existingData={selectedMachine}
+          jobMachineId={selectedMachine.link_id}    
+          initialReport={selectedMachine.report}
         />
       )}
 

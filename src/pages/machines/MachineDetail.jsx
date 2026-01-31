@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getMachineById } from '../../services/machineService';
 import { formatDate } from '../../utils/dateUtils';
 import EditMachineModal from '../../modals/machines/EditMachineModal';
+import HistoryDetailModal from '../../modals/machines/HistoryDetailModal';
 import { ArrowLeft, MapPin, Cpu, CalendarCheck, History, AlertTriangle, CheckCircle2, Factory, Edit3, Truck } from 'lucide-react';
 
 const MachineDetail = () => {
@@ -12,6 +13,7 @@ const MachineDetail = () => {
   const [machine, setMachine] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedHistoryEntry, setSelectedHistoryEntry] = useState(null);
 
   const loadData = async () => {
     try {
@@ -98,7 +100,7 @@ const MachineDetail = () => {
                    <Truck className="text-orange-500 mt-1" size={20} />
                    <div>
                       <div className="text-xs text-slate-500">Dodavatel stroje</div>
-                      <div className="font-medium text-slate-900">{machine.supplier || '-'}</div>
+                      <div className="font-medium text-slate-900">{machine.supplier || 'Neurčeno'}</div>
                    </div>
                 </div>
 
@@ -126,7 +128,7 @@ const MachineDetail = () => {
                    <Cpu className="text-purple-500 mt-1" size={20} />
                    <div>
                       <div className="text-xs text-slate-500">Verze Software</div>
-                      <div className="font-medium text-slate-900">{machine.sw_version || '-'}</div>
+                      <div className="font-medium text-slate-900">{machine.sw_version || 'Neurčeno'}</div>
                    </div>
                 </div>
 
@@ -138,7 +140,7 @@ const MachineDetail = () => {
                    <div>
                       <div className="text-xs text-slate-500">Prvotní ověření</div>
                       <div className="font-medium text-slate-900">
-                        {machine.initial_verification ? formatDate(machine.initial_verification) : '-'}
+                        {machine.initial_verification ? formatDate(machine.initial_verification) : 'Neurčeno'}
                       </div>
                    </div>
                 </div>
@@ -148,7 +150,7 @@ const MachineDetail = () => {
                    <CalendarCheck className="text-green-500 mt-1" size={20} />
                    <div>
                       <div className="text-xs text-slate-500">Poslední datum ověření</div>
-                      <div className="font-medium text-slate-900">{formatDate(machine.last_verified)}</div>
+                      <div className="font-medium text-slate-900">{machine.last_verified ? formatDate(machine.last_verified) : 'Neurčeno'}</div>
                    </div>
                 </div>
 
@@ -167,44 +169,45 @@ const MachineDetail = () => {
                 <div className="divide-y divide-slate-100">
                     {machine.history && machine.history.length > 0 ? (
                         machine.history.map((entry, index) => (
-                            <div key={index} className="p-6 hover:bg-slate-50 transition-colors">
-                                <div className="flex justify-between items-start mb-2">
-                                    <div className="flex items-center gap-2">
-                                        <span className="font-mono text-sm font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+                            <div key={index} className="p-4 hover:bg-slate-50 transition-colors flex items-center justify-between group">
+                                
+                                {/* Levá část: Info */}
+                                <div className="flex items-center gap-4">
+                                    <div className="flex flex-col">
+                                        <span className="font-mono text-sm font-bold text-blue-600">
                                             {entry.jobs?.job_number}
                                         </span>
-                                        <span className="text-sm text-slate-400">•</span>
-                                        <span className="text-sm font-medium text-slate-600">
+                                        <span className="text-xs text-slate-400">
                                             {formatDate(entry.created_at)}
                                         </span>
                                     </div>
+                                    
+                                    <div className="hidden sm:block h-8 w-px bg-slate-200"></div>
 
-                                    {/* Zobrazení technika */}
-                                    {entry.jobs?.technician_names && (
-                                        <div className="text-xs text-slate-500 font-medium flex items-center gap-1">
-                                            👤 {entry.jobs.technician_names}
+                                    <div>
+                                        <div className="text-sm font-medium text-slate-800 flex items-center gap-2">
+                                            👤 {entry.jobs?.technician_names || 'Neuveden'}
                                         </div>
-                                    )}
-
-                                   <div className="text-xs font-bold text-slate-400 uppercase">
-                                        {entry.work_hours} hod
+                                        {/* Zkrácený náhled reportu (max 50 znaků) */}
+                                        <div className="text-xs text-slate-500 truncate max-w-[200px] md:max-w-md">
+                                            {entry.report ? entry.report : 'Bez popisu'}
+                                        </div>
                                     </div>
                                 </div>
-                                
-                                {/* Pokud je report, ukážeme ho, jinak placeholder */}
-                                {entry.report ? (
-                                    <p className="text-slate-800 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-100 text-sm">
-                                        {entry.report}
-                                    </p>
-                                ) : (
-                                    <p className="text-slate-400 italic text-sm">Bez záznamu (Servisní zásah).</p>
-                                )}
+
+                                {/* Pravá část: Tlačítko */}
+                                <button 
+                                    onClick={() => setSelectedHistoryEntry(entry)}
+                                    className="opacity-0 group-hover:opacity-100 transition-opacity px-3 py-1.5 bg-white border border-slate-300 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 text-slate-600 text-sm rounded-lg shadow-sm font-medium"
+                                >
+                                    Zobrazit detail
+                                </button>
                             </div>
                         ))
                     ) : (
+                        // ... prázdný stav ...
                         <div className="p-12 text-center text-slate-400">
-                            <History size={48} className="mx-auto mb-4 opacity-20" />
-                            <p>Zatím žádná servisní historie.</p>
+                           <p>Zatím žádná historie.</p>
                         </div>
                     )}
                 </div>
@@ -219,6 +222,13 @@ const MachineDetail = () => {
         onClose={() => setIsEditModalOpen(false)}
         machine={machine}
         onSuccess={loadData}
+      />
+
+      {/* MODÁL PRO DETAIL HISTORIE */}
+      <HistoryDetailModal 
+        isOpen={!!selectedHistoryEntry}
+        onClose={() => setSelectedHistoryEntry(null)}
+        entry={selectedHistoryEntry}
       />
 
     </div>

@@ -63,6 +63,8 @@ export const getMachineById = async (id) => {
   const { data: history, error: historyError } = await supabase
     .from('job_machines')
     .select(`
+      id,
+      completed_at,
       report,
       work_hours,
       created_at,
@@ -95,6 +97,50 @@ export const updateMachine = async (id, updates) => {
   if (error) {
     console.error('Chyba při aktualizaci stroje:', error);
     throw error;
+  }
+  return data;
+};
+
+// 6. Uložení reportu stroje a použitých dílů (Nahradí starou update funkci)
+export const completeMachineWork = async (jobMachineId, reportText, parts = []) => {
+  // A) Uložíme text reportu
+  const { error: updateError } = await supabase
+    .from('job_machines')
+    .update({ 
+      report: reportText, 
+      completed_at: new Date().toISOString() // Označíme jako hotové
+    })
+    .eq('id', jobMachineId);
+
+  if (updateError) throw updateError;
+
+  // B) Pokud jsou díly, uložíme je
+  if (parts.length > 0) {
+    const partsToInsert = parts.map(p => ({
+      job_machine_id: jobMachineId,
+      article_number: p.article_number,
+      description: p.description,
+      quantity: parseInt(p.quantity, 10)
+    }));
+
+    const { error: partsError } = await supabase
+      .from('job_machine_parts')
+      .insert(partsToInsert);
+
+    if (partsError) throw partsError;
+  }
+};
+
+// 7. Načtení použitých dílů pro konkrétní záznam historie
+export const getUsedParts = async (jobMachineId) => {
+  const { data, error } = await supabase
+    .from('job_machine_parts')
+    .select('*')
+    .eq('job_machine_id', jobMachineId);
+  
+  if (error) {
+    console.error('Chyba načítání dílů:', error);
+    return [];
   }
   return data;
 };

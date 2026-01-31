@@ -41,7 +41,25 @@ const EditMachineModal = ({ isOpen, onClose, onSuccess, machine }) => {
     e.preventDefault();
     setLoading(true);
     try {
+
+      const updates = { ...formData };
+
+      console.log("PŘED ČIŠTĚNÍM:", updates);
+
+      // 2. ČIŠTĚNÍ DAT: Pokud je datum prázdný řetězec "", změníme ho na null
+      if (updates.last_verified === "") {
+        updates.last_verified = null;
+      }
+      
+      // Pro jistotu ošetříme i datum instalace, pokud tam je
+      if (updates.initial_verification === "") {
+        updates.initial_verification = null;
+      }
+
+      console.log("ODESÍLÁM TOTO:", updates);
+
       await updateMachine(machine.id, formData);
+      console.log("Úspěšně uloženo!");
       onSuccess();
       onClose();
     } catch (err) {
