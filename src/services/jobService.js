@@ -72,7 +72,8 @@ export const getJobById = async (id) => {
         work_hours,
         completed_at,
         is_done,
-        machines (*)
+        machines (*),
+        job_machine_parts (*)
       )
     `)
     .eq('id', id)
@@ -89,7 +90,8 @@ export const getJobById = async (id) => {
       link_id: item.id,        // ID vazby (důležité pro update)
       report: item.report,     // Popis opravy
       machine_work_hours: item.work_hours, // Hodiny na stroji
-      is_done: !!item.completed_at || item.is_done    // Jestli je hotovo
+      is_done: !!item.completed_at || item.is_done,    // Jestli je hotovo
+      parts: item.job_machine_parts || []
     }))
   };
 

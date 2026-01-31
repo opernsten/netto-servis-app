@@ -7,7 +7,8 @@ import FinalizeJobModal from '../../modals/jobs/FinalizeJobModal';     // <--- M
 import { ArrowLeft, Building2, Calendar, Wrench, CheckCircle2, Clock, Car, Edit3 } from 'lucide-react';
 import { generateServicePDF } from '../../utils/pdfGenerator';
 import { FileDown } from 'lucide-react'; // Ikona stahování
-import { Award, UserCheck } from 'lucide-react'; // Award (Smlouva), UserCheck (Kouč)
+import { Award, UserCheck, Eye } from 'lucide-react'; // Award (Smlouva), UserCheck (Kouč)
+import JobReportPreviewModal from '../../modals/jobs/JobReportPreviewModal';
 
 const JobDetail = () => {
   const { id } = useParams();
@@ -19,6 +20,7 @@ const JobDetail = () => {
   // Modály
   const [selectedMachine, setSelectedMachine] = useState(null); // Který stroj edituji
   const [isFinalizeOpen, setIsFinalizeOpen] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const loadJob = async () => {
     try {
@@ -53,15 +55,27 @@ const JobDetail = () => {
             Zpět na seznam
         </button>
 
-        {/* Tlačítko pro PDF - Zobrazí se jen pokud je HOTOVO */}
+        {/* Tlačítka pro HOTOVÉ zakázky */}
         {job.status === 'hotovo' && (
+          <div className="flex gap-2">
+            {/* NOVÉ TLAČÍTKO: Náhled */}
             <button
-                onClick={() => generateServicePDF(job)}
-                className="flex items-center gap-2 bg-slate-800 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors shadow-sm"
+              onClick={() => setIsPreviewOpen(true)}
+              className="flex items-center gap-2 bg-white text-slate-700 border border-slate-300 px-4 py-2 rounded-lg hover:bg-slate-50 transition-colors shadow-sm"
             >
-                <FileDown size={18} />
-                Stáhnout protokol
+              <Eye size={18} />
+              Náhled
             </button>
+
+            {/* Staré tlačítko: PDF */}
+            <button
+              onClick={() => generateServicePDF(job)}
+              className="flex items-center gap-2 bg-slate-800 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors shadow-sm"
+            >
+              <FileDown size={18} />
+              Stáhnout protokol
+            </button>
+          </div>
         )}
     </div>
 
@@ -230,6 +244,12 @@ const JobDetail = () => {
         isOpen={isFinalizeOpen}
         onClose={() => setIsFinalizeOpen(false)}
         onSuccess={loadJob}
+        job={job}
+      />
+
+      <JobReportPreviewModal 
+        isOpen={isPreviewOpen}
+        onClose={() => setIsPreviewOpen(false)}
         job={job}
       />
 
