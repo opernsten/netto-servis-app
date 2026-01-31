@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Wrench, Hash, MapPin, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const MachineTable = ({ machines, loading }) => {
   if (loading) return <div className="p-8 text-center text-slate-500">Načítám stroje...</div>;
@@ -25,7 +26,9 @@ const MachineTable = ({ machines, loading }) => {
                   <div className="bg-slate-100 p-2 rounded-lg text-slate-600">
                     <Wrench size={20} />
                   </div>
-                  <span className="font-medium text-slate-900">{machine.name}</span>
+                  <Link to={`/machines/${machine.id}`} className="font-medium text-slate-900 hover:text-blue-600 hover:underline">
+                    {machine.name}
+                  </Link>
                 </div>
               </td>
               

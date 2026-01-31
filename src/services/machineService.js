@@ -42,3 +42,58 @@ export const getMachinesByCustomer = async (customerId) => {
   if (error) throw error;
   return data;
 };
+
+
+// 4. Získání detailu jednoho stroje VČETNĚ HISTORIE SERVISŮ
+export const getMachineById = async (id) => {
+  // A) Načteme info o stroji a majiteli
+  const { data: machine, error: machineError } = await supabase
+    .from('machines')
+    .select(`
+      *,
+      customers (id, name, address)
+    `)
+    .eq('id', id)
+    .single();
+
+  if (machineError) throw machineError;
+
+  // B) Načteme historii (vazba job_machines -> jobs)
+  // Chceme jen ty záznamy, kde už je něco vyplněno (report) nebo je hotovo
+  const { data: history, error: historyError } = await supabase
+    .from('job_machines')
+    .select(`
+      report,
+      work_hours,
+      created_at,
+      jobs (
+        job_number,
+        scheduled_date,
+        status,
+        priority
+      )
+    `)
+    .eq('machine_id', id)
+    .order('created_at', { ascending: false }); // Od nejnovějšího
+
+  if (historyError) throw historyError;
+
+  // Spojíme to dohromady
+  return { ...machine, history };
+};
+
+// 5. Aktualizace stroje (např. změna umístění, SW verze...)
+export const updateMachine = async (id, updates) => {
+  const { data, error } = await supabase
+    .from('machines')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Chyba při aktualizaci stroje:', error);
+    throw error;
+  }
+  return data;
+};
