@@ -212,8 +212,8 @@ const JobDetail = () => {
 
       {/* ZOBRAZENÍ VÝSLEDKU POKUD JE UŽ HOTOVO */}
       {job.status === 'hotovo' && (
-        <div className="bg-slate-100 p-4 rounded-xl text-center text-slate-500 text-sm">
-          Zakázka byla uzavřena. Cestovní čas: <b>{job.travel_hours} hod</b>.
+        <div className="bg-slate-100 p-4 rounded-xl text-center text-slate-500 text-sm border border-slate-200">
+          Zakázka byla uzavřena dne: <b>{new Date(job.completed_at).toLocaleString('cs-CZ')}</b>
         </div>
       )}
 
