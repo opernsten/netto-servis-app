@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getMachineById } from '../../services/machineService';
 import { formatDate } from '../../utils/dateUtils';
 import EditMachineModal from '../../modals/machines/EditMachineModal';
-import { ArrowLeft, MapPin, Cpu, CalendarCheck, History, AlertTriangle, CheckCircle2, Factory, Edit3 } from 'lucide-react';
+import { ArrowLeft, MapPin, Cpu, CalendarCheck, History, AlertTriangle, CheckCircle2, Factory, Edit3, Truck } from 'lucide-react';
 
 const MachineDetail = () => {
   const { id } = useParams();
@@ -93,6 +93,15 @@ const MachineDetail = () => {
                    <div className="text-sm text-slate-500">{machine.customers?.address}</div>
                 </div>
 
+                {/* Dodavatel */}
+                <div className="flex items-start gap-3">
+                   <Truck className="text-orange-500 mt-1" size={20} />
+                   <div>
+                      <div className="text-xs text-slate-500">Dodavatel stroje</div>
+                      <div className="font-medium text-slate-900">{machine.supplier || '-'}</div>
+                   </div>
+                </div>
+
                 {/* S/N */}
                 <div>
                    <div className="text-xs text-slate-500 mb-1">Výrobní číslo</div>
@@ -169,7 +178,15 @@ const MachineDetail = () => {
                                             {formatDate(entry.created_at)}
                                         </span>
                                     </div>
-                                    <div className="text-xs font-bold text-slate-400 uppercase">
+
+                                    {/* Zobrazení technika */}
+                                    {entry.jobs?.technician_names && (
+                                        <div className="text-xs text-slate-500 font-medium flex items-center gap-1">
+                                            👤 {entry.jobs.technician_names}
+                                        </div>
+                                    )}
+
+                                   <div className="text-xs font-bold text-slate-400 uppercase">
                                         {entry.work_hours} hod
                                     </div>
                                 </div>

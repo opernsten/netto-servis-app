@@ -9,6 +9,15 @@ import { Search, ChevronDown, Check, Wrench } from 'lucide-react';
 const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const SERVICE_TYPES = [
+    "Pozáruční servis",
+    "Záruční servis",
+    "Oprava poruchy",
+    "Instalace",
+    "MID (Ověření)",
+    "Preventivní prohlídka"
+  ];
   
   // Data
   const [customers, setCustomers] = useState([]);
@@ -22,7 +31,10 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
   // Formulář
   const [formData, setFormData] = useState({
     job_number: '',
-    title: '',
+    title: 'Instalace',
+    technician_names: '',
+    coach: '',
+    has_service_contract: false,
     description: '',
     status: 'nova',
     priority: 'stredni',
@@ -89,7 +101,8 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    setFormData({ ...formData, [e.target.name]: value });
   };
 
   const handleSubmit = async (e) => {
@@ -195,6 +208,47 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
           )}
         </div>
 
+        {/* SERVISNÍ SMLOUVA (Checkbox) */}
+        <div className="flex items-center gap-2 py-1">
+            <input
+              type="checkbox"
+              id="has_service_contract"
+              name="has_service_contract"
+              checked={formData.has_service_contract}
+              onChange={handleChange}
+              className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+            />
+            <label htmlFor="has_service_contract" className="text-sm font-medium text-slate-800 cursor-pointer">
+              Zákazník má servisní smlouvu
+            </label>
+        </div>
+
+        {/* KOUČ ZAKÁZKY */}
+        <div>
+          <label className="block text-sm font-medium text-slate-700">Kouč zakázky</label>
+          <input
+            type="text"
+            name="coach"
+            value={formData.coach}
+            onChange={handleChange}
+            placeholder="Např. Petr Manažer"
+            className="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+          />
+        </div>
+
+        {/* TECHNICI */}
+        <div>
+          <label className="block text-sm font-medium text-slate-700">Technici na výjezdu</label>
+          <input
+            type="text"
+            name="technician_names"
+            value={formData.technician_names}
+            onChange={handleChange}
+            placeholder="Např. Svoboda"
+            className="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+          />
+        </div>
+
         {/* VÝBĚR STROJŮ (CHECKBOXY) - Zobrazí se až po výběru zákazníka */}
         {customerMachines.length > 0 && (
           <div className="bg-slate-50 p-3 rounded-lg border border-slate-200">
@@ -221,18 +275,22 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
           </div>
         )}
 
-        {/* PŘEDMĚT */}
+        {/* VÝBĚR TYPU SERVISU */}
         <div>
-          <label className="block text-sm font-medium text-slate-700">Předmět / Závada *</label>
-          <input
-            type="text"
+          <label className="block text-sm font-medium text-slate-700">Typ servisu *</label>
+          <select
             name="title"
             required
             value={formData.title}
             onChange={handleChange}
-            className="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-            placeholder="Např. Výměna ložiska"
-          />
+            className="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+          >
+            {SERVICE_TYPES.map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* PRIORITA */}

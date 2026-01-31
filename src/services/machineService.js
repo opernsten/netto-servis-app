@@ -70,7 +70,8 @@ export const getMachineById = async (id) => {
         job_number,
         scheduled_date,
         status,
-        priority
+        priority,
+        technician_names
       )
     `)
     .eq('machine_id', id)

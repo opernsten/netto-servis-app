@@ -7,6 +7,7 @@ import FinalizeJobModal from '../../modals/jobs/FinalizeJobModal';     // <--- M
 import { ArrowLeft, Building2, Calendar, Wrench, CheckCircle2, Clock, Car, Edit3 } from 'lucide-react';
 import { generateServicePDF } from '../../utils/pdfGenerator';
 import { FileDown } from 'lucide-react'; // Ikona stahování
+import { Award, UserCheck } from 'lucide-react'; // Award (Smlouva), UserCheck (Kouč)
 
 const JobDetail = () => {
   const { id } = useParams();
@@ -66,11 +67,21 @@ const JobDetail = () => {
 
       {/* HLAVIČKA */}
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+
+        {/* ŠTÍTEK DOKONČENO */}
         {job.status === 'hotovo' && (
           <div className="absolute top-0 right-0 bg-green-500 text-white text-xs font-bold px-8 py-1 rotate-45 translate-x-8 translate-y-4 shadow-sm">
             DOKONČENO
           </div>
         )}
+
+        {/* Štítek Smlouva */}
+        {job.has_service_contract && (
+          <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-bold uppercase flex items-center gap-1 border border-purple-200">
+            <Award size={14} /> Servisní smlouva
+          </span>
+        )}
+
         <div className="flex justify-between items-start mb-6">
           <div>
             <div className="flex items-center gap-3 mb-2">
@@ -99,6 +110,22 @@ const JobDetail = () => {
                 <p className="text-slate-600">{job.customers.address}</p>
               </div>
             </div>
+          </div>
+          {/* KOUČ */}
+          <div className="mt-6 pt-6 border-t border-slate-100">
+             <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">Realizační tým</h3>
+             <div className="grid grid-cols-2 gap-4">
+                <div>
+                   <div className="text-xs text-slate-500">Technici na výjezdu</div>
+                   <div className="font-medium text-slate-900">{job.technician_names || '-'}</div>
+                </div>
+                <div>
+                   <div className="text-xs text-slate-500">Kouč zakázky</div>
+                   <div className="font-medium text-slate-900 flex items-center gap-2">
+                      {job.coach ? <><UserCheck size={16} className="text-blue-500"/> {job.coach}</> : '-'}
+                   </div>
+                </div>
+             </div>
           </div>
           <div>
              <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">Zadání</h3>

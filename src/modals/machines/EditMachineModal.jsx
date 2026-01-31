@@ -13,7 +13,8 @@ const EditMachineModal = ({ isOpen, onClose, onSuccess, machine }) => {
     location: '',
     sw_version: '',
     last_verified: '',
-    initial_verification: '' // <--- NOVÉ POLE
+    initial_verification: '',
+    supplier: '' 
   });
 
   useEffect(() => {
@@ -26,7 +27,8 @@ const EditMachineModal = ({ isOpen, onClose, onSuccess, machine }) => {
         location: machine.location || '',
         sw_version: machine.sw_version || '',
         last_verified: machine.last_verified || '',
-        initial_verification: machine.initial_verification || '' // <--- Načtení hodnoty
+        initial_verification: machine.initial_verification || '',
+        supplier: machine.supplier || ''
       });
     }
   }, [machine, isOpen]);
@@ -76,6 +78,16 @@ const EditMachineModal = ({ isOpen, onClose, onSuccess, machine }) => {
                     <option value="HC-A">HC-A</option>
                     <option value="Jiné">Jiné</option>
                 </select>
+            </div>
+            <div>
+                <label className="block text-sm font-medium text-slate-700">Dodavatel stroje</label>
+                <input 
+                  name="supplier" 
+                  value={formData.supplier} 
+                  onChange={handleChange} 
+                  placeholder="Např. Netto Electonics"
+                  className="w-full mt-1 px-3 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500" 
+                />
             </div>
             <div>
                 <label className="block text-sm font-medium text-slate-700">Status</label>
