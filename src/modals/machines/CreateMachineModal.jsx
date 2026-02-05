@@ -5,6 +5,8 @@ import { createMachine } from '../../services/machineService';
 import { getCustomers } from '../../services/customerService';
 import { Search, ChevronDown, Check } from 'lucide-react';
 
+import { MACHINE_TYPES, MACHINE_STATUS_OPTIONS } from '../../constants/appConstants';
+
 const CreateMachineModal = ({ isOpen, onClose, onSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -171,19 +173,19 @@ const CreateMachineModal = ({ isOpen, onClose, onSuccess }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700">Typ</label>
-            <select
-              name="type"
-              value={formData.type}
-              onChange={handleChange}
-              className="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white"
-            >
-              <option value="TQS">TQS</option>
-              <option value="CW">CW</option>
-              <option value="X-RAY">X-RAY</option>
-              <option value="HC-A">HC-A</option>
-              <option value="Jiné">Jiné</option>
-            </select>
+              <label className="block text-sm font-medium text-slate-700">Typ</label>
+              <select 
+                  name="type" 
+                  value={formData.type} 
+                  onChange={handleChange} 
+                  className="w-full mt-1 px-3 py-2 border rounded-lg outline-none bg-white focus:ring-2 focus:ring-blue-500"
+              >
+                  {MACHINE_TYPES.map((type) => (
+                      <option key={type.value} value={type.value}>
+                          {type.label}
+                      </option>
+                  ))}
+              </select>
           </div>
         </div>
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Modal from '../../components/ui/Modal';
 import { updateMachine } from '../../services/machineService';
+import { MACHINE_TYPES, MACHINE_STATUS_OPTIONS } from '../../constants/appConstants';
 
 const EditMachineModal = ({ isOpen, onClose, onSuccess, machine }) => {
   const [loading, setLoading] = useState(false);
@@ -90,13 +91,18 @@ const EditMachineModal = ({ isOpen, onClose, onSuccess, machine }) => {
 
         <div className="grid grid-cols-2 gap-4">
             <div>
-                <label className="block text-sm font-medium text-slate-700">Typ</label>
-                <select name="type" value={formData.type} onChange={handleChange} className="w-full mt-1 px-3 py-2 border rounded-lg outline-none bg-white">
-                    <option value="TQS">TQS</option>
-                    <option value="CW">CW</option>
-                    <option value="X-RAY">X-RAY</option>
-                    <option value="HC-A">HC-A</option>
-                    <option value="Jiné">Jiné</option>
+                <label className="block text-sm font-medium text-slate-700">Typ stroje</label>
+                <select 
+                    name="type" 
+                    value={formData.type} 
+                    onChange={handleChange} 
+                    className="w-full mt-1 px-3 py-2 border rounded-lg outline-none bg-white focus:ring-2 focus:ring-blue-500"
+                >
+                    {MACHINE_TYPES.map((type) => (
+                        <option key={type.value} value={type.value}>
+                            {type.label}
+                        </option>
+                    ))}
                 </select>
             </div>
             <div>
@@ -110,11 +116,18 @@ const EditMachineModal = ({ isOpen, onClose, onSuccess, machine }) => {
                 />
             </div>
             <div>
-                <label className="block text-sm font-medium text-slate-700">Status</label>
-                <select name="status" value={formData.status} onChange={handleChange} className="w-full mt-1 px-3 py-2 border rounded-lg outline-none bg-white">
-                    <option value="ok">🟢 V pořádku</option>
-                    <option value="porucha">🔴 Porucha / Servis</option>
-                    <option value="odstaveno">⚪ Odstaveno</option>
+                <label className="block text-sm font-medium text-slate-700">Aktuální stav</label>
+                <select 
+                    name="status" 
+                    value={formData.status} 
+                    onChange={handleChange} 
+                    className="w-full mt-1 px-3 py-2 border rounded-lg outline-none bg-white focus:ring-2 focus:ring-blue-500"
+                >
+                    {MACHINE_STATUS_OPTIONS.map((status) => (
+                        <option key={status.value} value={status.value}>
+                            {status.label}
+                        </option>
+                    ))}
                 </select>
             </div>
             {/* NOVĚ PŘIDANÉ POLÍČKO */}

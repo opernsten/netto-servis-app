@@ -5,6 +5,7 @@ import { createJob } from '../../services/jobService';
 import { getCustomers } from '../../services/customerService';
 import { getMachinesByCustomer } from '../../services/machineService'; 
 import { Wrench, User, Calendar, FileText, Briefcase } from 'lucide-react';
+import { JOB_STATUS_OPTIONS } from '../../constants/appConstants';
 
 const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
   const [loading, setLoading] = useState(false);
