@@ -1,9 +1,10 @@
 import React from 'react';
 import { Wrench, CheckCircle2, Edit3 } from 'lucide-react';
+import Card from '../../components/ui/Card';
 
 const JobMachineList = ({ machines, status, onEditMachine }) => {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <Card className="rounded-xl shadow-sm border border-slate-200 overflow-hidden" noPadding>
         <div className="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
           <h3 className="font-bold text-slate-800 flex items-center gap-2"><Wrench size={18} /> Servisované stroje</h3>
         </div>
@@ -48,7 +49,7 @@ const JobMachineList = ({ machines, status, onEditMachine }) => {
             </div>
           ))}
         </div>
-      </div>
+      </Card>
   );
 };
 

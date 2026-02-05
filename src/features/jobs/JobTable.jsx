@@ -3,15 +3,14 @@ import PropTypes from 'prop-types';
 import { Calendar, AlertCircle, CheckCircle2, Clock } from 'lucide-react';
 import { formatDate } from '../../utils/dateUtils';
 import { Link } from 'react-router-dom';
+import Badge from '../../components/ui/Badge';
+import Card from '../../components/ui/Card';
+import { JOB_STATUS_COLORS, JOB_STATUS_LABELS } from '../../constants/appConstants';
 
 const getStatusBadge = (status) => {
-  switch (status) {
-    case 'nova': return <span className="bg-blue-100 text-blue-800 text-xs px-2.5 py-1 rounded-full font-medium">Nová</span>;
-    case 'resi_se': return <span className="bg-yellow-100 text-yellow-800 text-xs px-2.5 py-1 rounded-full font-medium">Řeší se</span>;
-    case 'ceka_dily': return <span className="bg-orange-100 text-orange-800 text-xs px-2.5 py-1 rounded-full font-medium">Čeká na díly</span>;
-    case 'hotovo': return <span className="bg-green-100 text-green-800 text-xs px-2.5 py-1 rounded-full font-medium">Hotovo</span>;
-    default: return <span className="bg-gray-100 text-gray-800 text-xs px-2.5 py-1 rounded-full font-medium">{status}</span>;
-  }
+  const variant = JOB_STATUS_COLORS[status] || 'neutral';
+  const label = JOB_STATUS_LABELS[status] || status;
+  return <Badge variant={variant}>{label}</Badge>;
 };
 
 const getPriorityIcon = (priority) => {
@@ -29,7 +28,7 @@ const JobTable = ({ jobs, loading }) => {
   if (!jobs?.length) return <div className="p-8 text-center text-slate-500">Zatím žádné zakázky.</div>;
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <Card className="rounded-xl shadow-sm border border-slate-200 overflow-hidden" noPadding>
       <table className="w-full text-left">
         <thead className="bg-slate-50 border-b border-slate-200">
           <tr>
@@ -97,7 +96,7 @@ const JobTable = ({ jobs, loading }) => {
           ))}
         </tbody>
       </table>
-    </div>
+    </Card>
   );
 };
 
