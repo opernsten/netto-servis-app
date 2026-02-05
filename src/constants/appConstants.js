@@ -70,3 +70,23 @@ export const CONTRACT_STATUS_LABELS = {
     true: 'Smlouva Aktivní',
     false: 'Bez smlouvy'
 };
+
+// ==========================================
+// 4. APLIKACE (APP)
+// ==========================================
+
+export const APP_TITLE = 'Netto Servis';
+export const APP_SUBTITLE = 'Servisní systém';
+
+export const SIDEBAR_NAV_LINKS = [
+    { to: '/', label: 'Přehled' },
+    { to: '/customers', label: 'Zákazníci' },
+    { to: '/machines', label: 'Stroje' },
+    { to: '/jobs', label: 'Zakázky' }
+];
+
+export const PLACEHOLDER_USER = {
+  name: 'Technik',
+  status: 'online',
+  initials: 'T'
+};
