@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
-import Sidebar from './components/layout/Sidebar';
+import PageLayout from './components/layout/PageLayout';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/auth/Login';
 import CustomerList from './pages/customers/CustomerList';
@@ -28,21 +28,17 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <OfflineNotification />
-      <Sidebar />
-      <main className="flex-1 overflow-y-auto p-8">
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/customers" element={<CustomerList />} />
-          <Route path="/machines" element={<MachineList />} />
-          <Route path="/jobs" element={<JobList />} />
-          <Route path="/jobs/:id" element={<JobDetail />} />
-          <Route path="/machines/:id" element={<MachineDetail />} />
-          <Route path="/customers/:id" element={<CustomerDetail />} />
-        </Routes>
-      </main>
-    </div>
+    <PageLayout>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/customers" element={<CustomerList />} />
+        <Route path="/machines" element={<MachineList />} />
+        <Route path="/jobs" element={<JobList />} />
+        <Route path="/jobs/:id" element={<JobDetail />} />
+        <Route path="/machines/:id" element={<MachineDetail />} />
+        <Route path="/customers/:id" element={<CustomerDetail />} />
+      </Routes>
+    </PageLayout>
   );
 }
 

@@ -1,9 +1,11 @@
 import React from 'react';
 import { Building2, MapPin } from 'lucide-react';
+import Card from '../../components/ui/Card';
+import Badge from '../../components/ui/Badge';
 
 const CustomerCardHeader = ({ customer }) => {
   return (
-    <div className="bg-white rounded-t-2xl border-x border-t border-slate-300 shadow-sm overflow-hidden">
+    <Card className="rounded-t-2xl border-x border-t border-slate-300 shadow-sm overflow-hidden" noPadding>
         {/* MODRÁ HLAVIČKA (UVNITŘ KARTY) */}
         <div className="bg-gradient-to-r from-blue-700 to-indigo-800 p-8">
             <div className="flex flex-col md:flex-row justify-between items-start gap-6">
@@ -28,7 +30,7 @@ const CustomerCardHeader = ({ customer }) => {
                             <div className="p-1 bg-white rounded-full"></div>
                             <div className="flex flex-col">
                                 <span className="text-[10px] font-bold text-emerald-100 uppercase leading-none tracking-wider">Status</span>
-                                <span className="text-sm font-bold text-white">SMLOUVA AKTIVNÍ</span>
+                                <Badge variant="success-solid" className="px-0 py-0 bg-transparent text-sm">SMLOUVA AKTIVNÍ</Badge>
                             </div>
                         </div>
                     ) : (
@@ -36,14 +38,14 @@ const CustomerCardHeader = ({ customer }) => {
                             <div className="p-1 bg-slate-400 rounded-full"></div>
                             <div className="flex flex-col">
                                 <span className="text-[10px] font-bold text-slate-300 uppercase leading-none tracking-wider">Status</span>
-                                <span className="text-sm font-bold text-slate-100">BEZ SMLOUVY</span>
+                                <Badge variant="neutral-solid" className="px-0 py-0 bg-transparent text-sm">BEZ SMLOUVY</Badge>
                             </div>
                         </div>
                     )}
                 </div>
             </div>
         </div>
-    </div>
+    </Card>
   );
 };
 

@@ -1,10 +1,13 @@
 import React from 'react';
 import { Building2, Calendar, Award, UserCheck } from 'lucide-react';
 import { formatDate } from '../../utils/dateUtils';
+import Card from '../../components/ui/Card';
+import Badge from '../../components/ui/Badge';
+import { JOB_STATUS_COLORS } from '../../constants/appConstants';
 
 const JobDetailHeader = ({ job }) => {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+    <Card className="p-6 relative overflow-hidden">
 
         {/* ŠTÍTEK DOKONČENO */}
         {job.status === 'hotovo' && (
@@ -15,18 +18,18 @@ const JobDetailHeader = ({ job }) => {
 
         {/* Štítek Smlouva */}
         {job.has_service_contract && (
-          <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-bold uppercase flex items-center gap-1 border border-purple-200">
+          <Badge variant="purple" className="flex items-center gap-1 border border-purple-200">
             <Award size={14} /> Servisní smlouva
-          </span>
+          </Badge>
         )}
 
-        <div className="flex justify-between items-start mb-6">
+        <div className="flex justify-between items-start mb-6 mt-2">
           <div>
             <div className="flex items-center gap-3 mb-2">
               <span className="font-mono text-lg font-bold text-slate-700 bg-slate-100 px-3 py-1 rounded">{job.job_number}</span>
-              <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${job.status === 'hotovo' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>
-                {job.status}
-              </span>
+              <Badge variant={JOB_STATUS_COLORS[job.status] || 'neutral'}>
+                {job.status.toUpperCase()}
+              </Badge>
             </div>
             <h1 className="text-2xl font-bold text-slate-900">{job.title}</h1>
           </div>
@@ -70,7 +73,7 @@ const JobDetailHeader = ({ job }) => {
              <div className="bg-slate-50 p-4 rounded-lg border border-slate-100 text-slate-700">{job.description || 'Bez popisu.'}</div>
           </div>
         </div>
-      </div>
+      </Card>
   );
 };
 
