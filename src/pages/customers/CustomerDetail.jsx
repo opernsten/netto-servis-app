@@ -51,33 +51,27 @@ const CustomerDetail = () => {
   if (!customer) return <div className="min-h-screen bg-slate-100 flex items-center justify-center text-red-500">Zákazník nenalezen.</div>;
 
   return (
-    // 1. HLAVNÍ KONTEJNER: Přidáno 'relative', aby se 'absolute' prvky uvnitř chytaly tohoto boxu a nelezly do menu
-    // Změna pozadí na 'bg-slate-100' (tmavší než 50), aby bílé karty vynikly
-    <div className="relative min-h-screen bg-slate-100 pb-12 font-sans text-slate-600">
+    // POZADÍ STRÁNKY: Čistá šedá
+    <div className="min-h-screen bg-slate-100 pb-12 font-sans text-slate-600">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
       
-      {/* DEKORATIVNÍ POZADÍ HLAVIČKY */}
-      {/* Nyní je uvnitř 'relative' kontejneru, takže nepřeteče doleva */}
-      <div className="absolute top-0 left-0 w-full h-64 bg-gradient-to-r from-blue-700 to-indigo-800 z-0 shadow-sm"></div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 relative z-10">
-      
-        {/* NAVIGACE (Bílá na modrém pozadí) */}
-        <div className="mb-8 flex items-center justify-between">
+        {/* 1. HORNÍ NAVIGACE */}
+        <div className="mb-6 flex items-center justify-between">
             <button 
                 onClick={() => navigate('/customers')} 
-                className="group flex items-center gap-2 text-blue-100 hover:text-white transition-colors px-3 py-2 rounded-lg hover:bg-white/10"
+                className="group flex items-center gap-2 text-slate-500 hover:text-slate-800 transition-colors px-3 py-2 rounded-lg hover:bg-white"
             >
                 <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" /> 
                 <span className="font-medium">Zpět na přehled</span>
             </button>
             
             <div className="flex items-center gap-3">
-                <span className="text-[11px] font-mono text-blue-200 uppercase tracking-widest bg-black/20 px-3 py-1.5 rounded backdrop-blur-sm border border-white/10">
+                <span className="text-[11px] font-mono text-slate-400 uppercase tracking-widest bg-white px-2 py-1 rounded border border-slate-200">
                     ID: {customer.id.slice(0,8)}
                 </span>
                 <button 
                     onClick={() => setIsEditModalOpen(true)}
-                    className="flex items-center gap-2 bg-white text-blue-900 px-4 py-2 rounded-xl border-none shadow-lg shadow-black/10 hover:shadow-xl hover:bg-blue-50 transition-all duration-300 font-bold text-sm"
+                    className="flex items-center gap-2 bg-white text-slate-700 px-4 py-2 rounded-xl border border-slate-300 shadow-sm hover:shadow-md hover:border-blue-400 hover:text-blue-600 transition-all font-bold text-sm"
                 >
                     <Edit size={16} /> <span className="hidden sm:inline">Upravit údaje</span>
                 </button>
@@ -85,112 +79,121 @@ const CustomerDetail = () => {
         </div>
 
         {/* 2. HLAVNÍ KARTA (VIZITKA) */}
-        {/* Zvýšený stín (shadow-xl) a jasnější border */}
-        <div className="bg-white rounded-2xl shadow-xl shadow-slate-300/50 overflow-hidden mb-8 ring-1 ring-slate-200">
+        {/* DŮLEŽITÉ: overflow-hidden zajistí, že gradient uvnitř nepřečuhuje rohy */}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-xl shadow-slate-300/40 overflow-hidden mb-8">
             
-            {/* Hlavička uvnitř karty */}
-            <div className="p-8 pb-0">
-                <div className="flex flex-col md:flex-row justify-between items-start gap-6 mb-8 border-b border-slate-100 pb-8">
+            {/* --- GRADIENT HLAVIČKA (Opraveno) --- */}
+            {/* Vloženo přímo sem, barvy textu změněny na bílou pro kontrast */}
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-8">
+                <div className="flex flex-col md:flex-row justify-between items-start gap-6">
                     <div className="flex items-center gap-6">
-                        {/* Ikona firmy */}
-                        <div className="w-20 h-20 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 shadow-inner border border-blue-100">
-                            <Building2 size={36} />
+                        {/* Ikona firmy - bílá na průhledném pozadí */}
+                        <div className="w-24 h-24 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center text-white border border-white/20 shadow-inner">
+                            <Building2 size={40} />
                         </div>
                         <div>
-                            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">{customer.name}</h1>
-                            <div className="flex items-center gap-2 mt-2 text-slate-500">
-                                <MapPin size={16} className="text-blue-500"/> 
-                                <span className="font-medium text-sm text-slate-700">{customer.address || 'Adresa neuvedena'}</span>
+                            <h1 className="text-3xl font-bold tracking-tight text-white">{customer.name}</h1>
+                            <div className="flex items-center gap-2 mt-2 text-blue-100">
+                                <MapPin size={16} className="text-blue-200"/> 
+                                <span className="font-medium text-sm">{customer.address || 'Adresa neuvedena'}</span>
                             </div>
                         </div>
                     </div>
 
-                    {/* Status Smlouvy */}
-                    <div className="mt-2 md:mt-0">
+                    {/* Status Smlouvy - upraveno pro tmavé pozadí */}
+                    <div className="mt-4 md:mt-0">
                         {customer.has_service_contract ? (
-                            <div className="flex items-center gap-3 px-5 py-2 bg-emerald-50 rounded-full border border-emerald-100 shadow-sm">
-                                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                            <div className="flex items-center gap-3 px-5 py-2.5 bg-emerald-500/20 backdrop-blur-md rounded-full border border-emerald-500/30 shadow-lg">
+                                <div className="p-1 bg-emerald-400 rounded-full shadow-[0_0_15px_rgba(52,211,153,0.8)]"></div>
                                 <div className="flex flex-col">
-                                    <span className="text-[10px] font-bold text-emerald-600 uppercase leading-none tracking-wider">Status</span>
-                                    <span className="text-sm font-bold text-emerald-800">SMLOUVA AKTIVNÍ</span>
+                                    <span className="text-[10px] font-bold text-emerald-300 uppercase leading-none tracking-wider">Status</span>
+                                    <span className="text-sm font-bold text-white">SMLOUVA AKTIVNÍ</span>
                                 </div>
                             </div>
                         ) : (
-                            <div className="flex items-center gap-3 px-5 py-2 bg-slate-50 rounded-full border border-slate-200">
-                                <div className="w-2 h-2 bg-slate-400 rounded-full"></div>
+                            <div className="flex items-center gap-3 px-5 py-2.5 bg-white/10 backdrop-blur-md rounded-full border border-white/10">
+                                <div className="p-1 bg-slate-400 rounded-full"></div>
                                 <div className="flex flex-col">
-                                    <span className="text-[10px] font-bold text-slate-500 uppercase leading-none tracking-wider">Status</span>
-                                    <span className="text-sm font-bold text-slate-600">BEZ SMLOUVY</span>
+                                    <span className="text-[10px] font-bold text-slate-300 uppercase leading-none tracking-wider">Status</span>
+                                    <span className="text-sm font-bold text-slate-100">BEZ SMLOUVY</span>
                                 </div>
                             </div>
                         )}
                     </div>
                 </div>
             </div>
+            {/* --- KONEC GRADIENT HLAVIČKY --- */}
 
-            {/* Grid s informacemi - Jasně oddělené sekce */}
-            <div className="px-8 pb-8">
+
+            {/* Grid s informacemi (Šedé pozadí pro kontrast s bílými dlaždicemi) */}
+            <div className="p-8 bg-slate-50/50">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     
-                    {/* Sloupec 1: Kontakt */}
-                    <div className="bg-slate-50/50 p-5 rounded-xl border border-slate-200/60 hover:border-blue-200 transition-colors">
-                        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    {/* DLAŽDICE 1: Kontakt */}
+                    <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-md hover:shadow-lg hover:border-blue-300 transition-all duration-300 group">
+                        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-5 flex items-center gap-2 border-b border-slate-100 pb-2">
                             Kontakt
                         </h3>
                         <div className="space-y-4">
-                            <a href={`tel:${customer.phone}`} className="flex items-center gap-3 group">
-                                <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-slate-400 border border-slate-200 group-hover:text-blue-600 group-hover:border-blue-200 transition-colors shadow-sm">
-                                    <Phone size={16} />
+                            <a href={`tel:${customer.phone}`} className="flex items-center gap-4">
+                                <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center border border-blue-100 group-hover:scale-110 transition-transform">
+                                    <Phone size={18} />
                                 </div>
-                                <span className="text-sm font-semibold text-slate-700 group-hover:text-blue-700 transition-colors">{customer.phone || '—'}</span>
+                                <div>
+                                    <p className="text-xs text-slate-400 font-bold uppercase">Telefon</p>
+                                    <p className="text-sm font-bold text-slate-800 group-hover:text-blue-600 transition-colors">{customer.phone || '—'}</p>
+                                </div>
                             </a>
-                            <a href={`mailto:${customer.email}`} className="flex items-center gap-3 group">
-                                <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-slate-400 border border-slate-200 group-hover:text-blue-600 group-hover:border-blue-200 transition-colors shadow-sm">
-                                    <Mail size={16} />
+                            <a href={`mailto:${customer.email}`} className="flex items-center gap-4">
+                                <div className="w-10 h-10 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center border border-purple-100 group-hover:scale-110 transition-transform">
+                                    <Mail size={18} />
                                 </div>
-                                <span className="text-sm font-semibold text-slate-700 group-hover:text-blue-700 transition-colors break-all">{customer.email || '—'}</span>
+                                <div>
+                                    <p className="text-xs text-slate-400 font-bold uppercase">Email</p>
+                                    <p className="text-sm font-bold text-slate-800 group-hover:text-purple-600 transition-colors break-all">{customer.email || '—'}</p>
+                                </div>
                             </a>
                         </div>
                     </div>
 
-                    {/* Sloupec 2: Fakturace */}
-                    <div className="bg-slate-50/50 p-5 rounded-xl border border-slate-200/60 hover:border-blue-200 transition-colors">
-                        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">
+                    {/* DLAŽDICE 2: Fakturace */}
+                    <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-md hover:shadow-lg hover:border-blue-300 transition-all duration-300">
+                        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-5 flex items-center gap-2 border-b border-slate-100 pb-2">
                             Fakturační údaje
                         </h3>
-                        <div className="space-y-3">
-                            <div className="flex justify-between items-center bg-white px-3 py-2 rounded-lg border border-slate-200 shadow-sm">
+                        <div className="space-y-4">
+                            <div className="flex justify-between items-center bg-slate-50 p-3 rounded-lg border border-slate-100">
                                 <span className="text-xs font-bold text-slate-500 uppercase">IČO</span>
                                 <span className="font-mono text-sm font-bold text-slate-900">{customer.ico || '-'}</span>
                             </div>
-                            <div className="flex justify-between items-center bg-white px-3 py-2 rounded-lg border border-slate-200 shadow-sm">
+                            <div className="flex justify-between items-center bg-slate-50 p-3 rounded-lg border border-slate-100">
                                 <span className="text-xs font-bold text-slate-500 uppercase">DIČ</span>
                                 <span className="font-mono text-sm font-bold text-slate-900">{customer.dic || '-'}</span>
                             </div>
                         </div>
                     </div>
 
-                    {/* Sloupec 3: Lidé */}
-                    <div className="bg-slate-50/50 p-5 rounded-xl border border-slate-200/60 hover:border-blue-200 transition-colors">
-                        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">
+                    {/* DLAŽDICE 3: Lidé */}
+                    <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-md hover:shadow-lg hover:border-blue-300 transition-all duration-300">
+                        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-5 flex items-center gap-2 border-b border-slate-100 pb-2">
                             Zodpovědné osoby
                         </h3>
-                        <div className="space-y-3">
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 border border-orange-200 font-bold text-xs">
-                                    K
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-orange-600 border border-orange-100 shadow-sm">
+                                    <User size={18} />
                                 </div>
                                 <div>
-                                    <p className="text-[10px] uppercase text-slate-400 font-bold leading-none mb-0.5">Klient</p>
+                                    <p className="text-[10px] uppercase text-slate-400 font-bold leading-none mb-1">Klient</p>
                                     <p className="text-sm font-bold text-slate-800">{customer.contact_person || '—'}</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 border border-blue-200 font-bold text-xs">
-                                    M
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 border border-indigo-100 shadow-sm">
+                                    <Briefcase size={18} />
                                 </div>
                                 <div>
-                                    <p className="text-[10px] uppercase text-slate-400 font-bold leading-none mb-0.5">Náš kouč</p>
+                                    <p className="text-[10px] uppercase text-slate-400 font-bold leading-none mb-1">Náš kouč</p>
                                     <p className="text-sm font-bold text-slate-800">{customer.internal_coach || '—'}</p>
                                 </div>
                             </div>
@@ -199,14 +202,15 @@ const CustomerDetail = () => {
 
                 </div>
 
-                {/* Poznámka - výraznější */}
+                {/* Poznámka */}
                 {customer.notes && (
-                    <div className="mt-6 pt-6 border-t border-slate-100">
-                         <div className="flex gap-4 bg-yellow-50 p-4 rounded-xl border border-yellow-200 text-slate-700 shadow-sm">
+                    <div className="mt-8 pt-6 border-t border-slate-200">
+                         <div className="flex gap-4 bg-yellow-50 p-4 rounded-xl border border-yellow-200 text-slate-700 shadow-sm relative overflow-hidden">
+                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-yellow-400"></div>
                             <div className="mt-0.5 text-yellow-600"><FileText size={20}/></div>
                             <div className="space-y-1">
                                 <p className="text-xs font-bold text-yellow-700 uppercase">Interní poznámka</p>
-                                <p className="text-sm italic leading-relaxed text-slate-800">{customer.notes}</p>
+                                <p className="text-sm italic leading-relaxed text-slate-700">{customer.notes}</p>
                             </div>
                          </div>
                     </div>
@@ -215,16 +219,13 @@ const CustomerDetail = () => {
         </div>
 
         {/* 3. KARTA S DATY (Tabulky) */}
-        {/* Opět výrazný stín a rámeček */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xl shadow-slate-300/50 overflow-hidden min-h-[500px] ring-1 ring-slate-200">
-            
-            {/* Navigace záložek */}
-            <div className="flex border-b border-slate-200 bg-slate-50">
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-xl shadow-slate-300/40 overflow-hidden min-h-[500px]">
+            <div className="flex border-b border-slate-200 bg-slate-50/50">
                 <button 
                     onClick={() => setActiveTab('machines')}
                     className={`relative px-8 py-5 text-sm font-bold flex items-center gap-2 transition-all ${
                         activeTab === 'machines' 
-                        ? 'text-blue-700 bg-white border-t-2 border-t-blue-600 border-r border-slate-100' 
+                        ? 'text-blue-700 bg-white border-t-2 border-t-blue-600 border-x border-slate-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]' 
                         : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100 border-t-2 border-t-transparent'
                     }`}
                 >
@@ -239,7 +240,7 @@ const CustomerDetail = () => {
                     onClick={() => setActiveTab('jobs')}
                     className={`relative px-8 py-5 text-sm font-bold flex items-center gap-2 transition-all ${
                         activeTab === 'jobs' 
-                        ? 'text-purple-700 bg-white border-t-2 border-t-purple-600 border-x border-slate-100' 
+                        ? 'text-purple-700 bg-white border-t-2 border-t-purple-600 border-x border-slate-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]' 
                         : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100 border-t-2 border-t-transparent'
                     }`}
                 >
@@ -261,7 +262,7 @@ const CustomerDetail = () => {
                                     <Wrench size={24} />
                                 </div>
                                 <h3 className="text-slate-900 font-bold mb-1">Zatím žádné stroje</h3>
-                                <p className="text-slate-500 text-sm mb-6">Evidence strojů je prázdná.</p>
+                                <p className="text-slate-400 text-sm mb-6">Evidence strojů je prázdná.</p>
                                 <Button variant="primary" onClick={() => setIsMachineModalOpen(true)} className="shadow-lg shadow-blue-500/30">
                                     + Přidat první stroj
                                 </Button>
@@ -269,7 +270,7 @@ const CustomerDetail = () => {
                         ) : (
                             <>
                                 <table className="w-full text-left text-sm">
-                                    <thead className="bg-slate-50/80 text-slate-500 uppercase text-[11px] font-bold tracking-wider border-b border-slate-200">
+                                    <thead className="bg-slate-50 text-slate-500 uppercase text-[11px] font-bold tracking-wider border-b border-slate-200">
                                         <tr>
                                             <th className="px-8 py-4 font-bold">Název stroje</th>
                                             <th className="px-6 py-4 font-bold">Sériové číslo</th>
@@ -333,7 +334,7 @@ const CustomerDetail = () => {
                             </div>
                         ) : (
                             <table className="w-full text-left text-sm">
-                                <thead className="bg-slate-50/80 text-slate-500 uppercase text-[11px] font-bold tracking-wider border-b border-slate-200">
+                                <thead className="bg-slate-50/80 text-slate-400 uppercase text-[11px] font-bold tracking-wider border-b border-slate-200">
                                     <tr>
                                         <th className="px-8 py-4 font-bold">Zakázka</th>
                                         <th className="px-6 py-4 font-bold">Datum</th>
