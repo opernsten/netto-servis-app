@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom'; // <--- 1. PŘIDÁNO: Import pro navigaci
 import { Building2, MapPin, Phone, Mail } from 'lucide-react';
 
 const CustomerTable = ({ customers, loading }) => {
+  const navigate = useNavigate(); // <--- 2. PŘIDÁNO: Aktivace navigace
+
   if (loading) {
     return <div className="p-8 text-center text-slate-500">Načítám data...</div>;
   }
@@ -60,7 +63,11 @@ const CustomerTable = ({ customers, loading }) => {
               </td>
 
               <td className="px-6 py-4">
-                <button className="text-blue-600 hover:text-blue-800 font-medium text-sm">
+                {/* 3. PŘIDÁNO: onClick událost */}
+                <button 
+                  onClick={() => navigate(`/customers/${customer.id}`)}
+                  className="text-blue-600 hover:text-blue-800 font-medium text-sm cursor-pointer"
+                >
                   Detail
                 </button>
               </td>

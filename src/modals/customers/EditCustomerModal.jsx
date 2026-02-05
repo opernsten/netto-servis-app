@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from '../../components/ui/Modal';
 import Button from '../../components/ui/Button';
 import { supabase } from '../../api/supabaseClient';
 
-const CreateCustomerModal = ({ isOpen, onClose, onSuccess }) => {
+const EditCustomerModal = ({ isOpen, onClose, customer, onUpdate }) => {
   const [loading, setLoading] = useState(false);
-  
   const [formData, setFormData] = useState({
     name: '',
     address: '',
@@ -13,11 +12,29 @@ const CreateCustomerModal = ({ isOpen, onClose, onSuccess }) => {
     email: '',
     ico: '',
     dic: '',
-    contact_person: '',
-    internal_coach: '',
-    notes: '', // <--- ZMĚNA: Používáme 'notes'
+    contact_person: '', // Zodpovědná osoba
+    internal_coach: '', // Náš kouč
+    notes: '',
     has_service_contract: false
   });
+
+  // Načtení dat zákazníka do formuláře při otevření
+  useEffect(() => {
+    if (customer) {
+      setFormData({
+        name: customer.name || '',
+        address: customer.address || '',
+        phone: customer.phone || '',
+        email: customer.email || '',
+        ico: customer.ico || '',
+        dic: customer.dic || '',
+        contact_person: customer.contact_person || '',
+        internal_coach: customer.internal_coach || '',
+        notes: customer.notes || '',
+        has_service_contract: customer.has_service_contract || false
+      });
+    }
+  }, [customer, isOpen]);
 
   const handleChange = (e) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
@@ -29,47 +46,50 @@ const CreateCustomerModal = ({ isOpen, onClose, onSuccess }) => {
     setLoading(true);
 
     try {
-      // Supabase insert do správných sloupců
       const { data, error } = await supabase
         .from('customers')
-        .insert([formData]) 
+        .update({
+          name: formData.name,
+          address: formData.address,
+          phone: formData.phone,
+          email: formData.email,
+          ico: formData.ico,
+          dic: formData.dic,
+          contact_person: formData.contact_person,
+          internal_coach: formData.internal_coach,
+          notes: formData.notes,
+          has_service_contract: formData.has_service_contract
+        })
+        .eq('id', customer.id)
         .select()
         .single();
 
       if (error) throw error;
 
-      if (onSuccess) onSuccess(data);
-      
-      // Vyčistíme formulář
-      setFormData({
-        name: '', address: '', phone: '', email: '', 
-        ico: '', dic: '', contact_person: '', 
-        internal_coach: '', notes: ''
-      });
-      
+      // Pošleme aktualizovaná data zpět do rodičovské komponenty
+      onUpdate(data);
       onClose();
     } catch (error) {
-      console.error('Chyba při vytváření zákazníka:', error);
-      alert('Nepodařilo se vytvořit zákazníka.');
+      console.error('Chyba při úpravě zákazníka:', error);
+      alert('Nepodařilo se uložit změny.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Přidat nového zákazníka">
+    <Modal isOpen={isOpen} onClose={onClose} title="Upravit zákazníka">
       <form onSubmit={handleSubmit} className="space-y-4">
         
         {/* Jméno firmy */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Název firmy / Zákazníka *</label>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Název firmy / Zákazníka</label>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
             required
-            placeholder="Např. ACME s.r.o."
             className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -82,12 +102,11 @@ const CreateCustomerModal = ({ isOpen, onClose, onSuccess }) => {
             name="address"
             value={formData.address}
             onChange={handleChange}
-            placeholder="Ulice, Město, PSČ"
             className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
-        {/* Kontakty */}
+        {/* Kontakty (Telefon / Email) */}
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">Telefon</label>
@@ -137,7 +156,7 @@ const CreateCustomerModal = ({ isOpen, onClose, onSuccess }) => {
 
         <hr className="border-slate-100 my-2" />
 
-        {/* Lidé */}
+        {/* Lidé (Kontaktní osoba / Kouč) */}
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">Kontaktní osoba (u nich)</label>
@@ -146,6 +165,7 @@ const CreateCustomerModal = ({ isOpen, onClose, onSuccess }) => {
               name="contact_person"
               value={formData.contact_person}
               onChange={handleChange}
+              placeholder="Jméno a příjmení"
               className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -156,6 +176,7 @@ const CreateCustomerModal = ({ isOpen, onClose, onSuccess }) => {
               name="internal_coach"
               value={formData.internal_coach}
               onChange={handleChange}
+              placeholder="Kdo se o ně stará?"
               className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -165,26 +186,25 @@ const CreateCustomerModal = ({ isOpen, onClose, onSuccess }) => {
         <div className="flex items-center gap-3 bg-slate-50 p-3 rounded-lg border border-slate-200">
             <input
                 type="checkbox"
-                id="has_service_contract"
+                id="has_service_contract_edit"
                 name="has_service_contract"
                 checked={formData.has_service_contract}
                 onChange={handleChange}
                 className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
             />
-            <label htmlFor="has_service_contract" className="text-sm font-medium text-slate-700 cursor-pointer select-none">
+            <label htmlFor="has_service_contract_edit" className="text-sm font-medium text-slate-700 cursor-pointer select-none">
                 Tento zákazník má aktivní servisní smlouvu
             </label>
         </div>
 
-        {/* Poznámka (NOTES) */}
+        {/* Poznámka */}
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">Interní poznámka</label>
           <textarea
-            name="notes" // <--- ZMĚNA: name="notes"
-            value={formData.notes} // <--- ZMĚNA: formData.notes
+            name="notes"
+            value={formData.notes}
             onChange={handleChange}
             rows="3"
-            placeholder="Něco důležitého o zákazníkovi..."
             className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -194,7 +214,7 @@ const CreateCustomerModal = ({ isOpen, onClose, onSuccess }) => {
             Zrušit
           </Button>
           <Button variant="primary" type="submit" disabled={loading}>
-            {loading ? 'Vytvářím...' : 'Vytvořit zákazníka'}
+            {loading ? 'Ukládám...' : 'Uložit změny'}
           </Button>
         </div>
       </form>
@@ -202,4 +222,4 @@ const CreateCustomerModal = ({ isOpen, onClose, onSuccess }) => {
   );
 };
 
-export default CreateCustomerModal;
+export default EditCustomerModal;

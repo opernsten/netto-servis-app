@@ -14,7 +14,8 @@ const EditMachineModal = ({ isOpen, onClose, onSuccess, machine }) => {
     sw_version: '',
     last_verified: '',
     initial_verification: '',
-    supplier: '' 
+    supplier: '',
+    manufacturing_year: ''
   });
 
   useEffect(() => {
@@ -28,7 +29,8 @@ const EditMachineModal = ({ isOpen, onClose, onSuccess, machine }) => {
         sw_version: machine.sw_version || '',
         last_verified: machine.last_verified || '',
         initial_verification: machine.initial_verification || '',
-        supplier: machine.supplier || ''
+        supplier: machine.supplier || '',
+        manufacturing_year: machine.manufacturing_year || ''
       });
     }
   }, [machine, isOpen]);
@@ -114,6 +116,17 @@ const EditMachineModal = ({ isOpen, onClose, onSuccess, machine }) => {
                     <option value="porucha">🔴 Porucha / Servis</option>
                     <option value="odstaveno">⚪ Odstaveno</option>
                 </select>
+            </div>
+            {/* NOVĚ PŘIDANÉ POLÍČKO */}
+            <div>
+                <label className="block text-sm font-medium text-slate-700">Rok výroby</label>
+                <input 
+                  name="manufacturing_year" 
+                  value={formData.manufacturing_year} 
+                  onChange={handleChange} 
+                  placeholder="Např. 2022"
+                  className="w-full mt-1 px-3 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500" 
+                />
             </div>
         </div>
 

@@ -112,6 +112,16 @@ const MachineDetail = () => {
                    </div>
                 </div>
 
+                {/* Rok výroby */}
+                <div>
+                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">
+                    Rok výroby
+                  </h3>
+                  <p className="font-medium text-slate-900 text-lg">
+                    {machine.manufacturing_year || '-'}
+                  </p>
+                </div>
+
                 <hr className="border-slate-100" />
 
                 {/* Umístění */}

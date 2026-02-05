@@ -31,3 +31,25 @@ export const createCustomer = async (customerData) => {
   if (error) throw error;
   return data;
 };
+
+// Získání detailu zákazníka včetně strojů a zakázek
+export const getCustomerById = async (id) => {
+  const { data, error } = await supabase
+    .from('customers')
+    .select(`
+      *,
+      machines (*),  
+      jobs (*)
+    `)
+    .eq('id', id)
+    .single();
+
+  if (error) throw error;
+
+  // Seřadíme zakázky od nejnovější po nejstarší (ať vidíme historii nahoře)
+  if (data.jobs) {
+    data.jobs.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  }
+
+  return data;
+};

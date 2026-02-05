@@ -8,7 +8,8 @@ import { ArrowLeft, Building2, Calendar, Wrench, CheckCircle2, Clock, Car, Edit3
 import { generateServicePDF } from '../../utils/pdfGenerator';
 import { FileDown } from 'lucide-react'; // Ikona stahování
 import { Award, UserCheck, Eye } from 'lucide-react'; // Award (Smlouva), UserCheck (Kouč)
-import JobReportPreviewModal from '../../modals/jobs/JobReportPreviewModal';
+import JobReportPreviewModal from '../../modals/jobs/JobReportPreviewModal';  
+import Button from '../../components/ui/Button';
 
 const JobDetail = () => {
   const { id } = useParams();
@@ -58,23 +59,17 @@ const JobDetail = () => {
         {/* Tlačítka pro HOTOVÉ zakázky */}
         {job.status === 'hotovo' && (
           <div className="flex gap-2">
+            
             {/* NOVÉ TLAČÍTKO: Náhled */}
-            <button
-              onClick={() => setIsPreviewOpen(true)}
-              className="flex items-center gap-2 bg-white text-slate-700 border border-slate-300 px-4 py-2 rounded-lg hover:bg-slate-50 transition-colors shadow-sm"
-            >
-              <Eye size={18} />
-              Náhled
-            </button>
+            <Button variant="secondary" onClick={() => setIsPreviewOpen(true)}>
+                <Eye size={18} />
+                Náhled
+            </Button>
 
-            {/* Staré tlačítko: PDF */}
-            <button
-              onClick={() => generateServicePDF(job)}
-              className="flex items-center gap-2 bg-slate-800 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors shadow-sm"
-            >
-              <FileDown size={18} />
-              Stáhnout protokol
-            </button>
+            <Button variant="primary" onClick={() => generateServicePDF(job)}>
+                <FileDown size={18} />
+                Stáhnout protokol
+            </Button>
           </div>
         )}
     </div>
