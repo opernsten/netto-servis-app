@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { getJobs } from '../../services/jobService';
 import JobTable from '../../features/jobs/JobTable';
-import CreateJobModal from '../../modals/jobs/CreateJobModal'; // <--- Import
+import CreateJobModal from '../../modals/jobs/CreateJobModal';
 import { ClipboardList } from 'lucide-react';
+import Header from '../../components/layout/Header';
+import Button from '../../components/ui/Button';
 
 const JobList = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false); // <--- Stav modálu
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const loadData = async () => {
     setLoading(true);
@@ -27,25 +29,22 @@ const JobList = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800">Servisní zakázky</h1>
-          <p className="text-slate-500 text-sm">Přehled všech výjezdů a oprav</p>
-        </div>
-        
-        {/* Tlačítko otevírá modál */}
-        <button 
-          onClick={() => setIsModalOpen(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-sm"
-        >
-          <ClipboardList size={18} />
-          Nová zakázka
-        </button>
-      </div>
+      <Header
+        title="Servisní zakázky"
+        subtitle="Přehled všech výjezdů a oprav"
+        actions={
+          <Button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-blue-600 hover:bg-blue-700 flex items-center gap-2"
+          >
+            <ClipboardList size={18} />
+            Nová zakázka
+          </Button>
+        }
+      />
 
       <JobTable jobs={jobs} loading={loading} />
 
-      {/* Modální okno */}
       <CreateJobModal 
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

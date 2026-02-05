@@ -18,9 +18,9 @@ const Button = ({
 }) => {
   
   // 1. Základní vzhled společný pro všechna tlačítka
-  const baseStyles = "flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
+  const baseStyles = "px-4 py-2 rounded-lg font-medium transition-colors shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
 
-  // 2. Definice barevných variant (podle toho, co už používáš)
+  // 2. Definice barevných variant
   const variants = {
     primary: "bg-slate-800 text-white hover:bg-slate-700",      // Tmavé (hlavní)
     secondary: "bg-white text-slate-700 border border-slate-300 hover:bg-slate-50", // Bílé s rámečkem
