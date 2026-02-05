@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { getCustomers } from '../../services/customerService';
 import CustomerTable from '../../features/customers/CustomerTable';
-import CreateCustomerModal from '../../modals/customers/CreateCustomerModal'; // <--- Import Modálu
+import CreateCustomerModal from '../../modals/customers/CreateCustomerModal';
 import { Plus, Search } from 'lucide-react';
+import Header from '../../components/layout/Header';
+import Button from '../../components/ui/Button';
+import Input from '../../components/ui/Input';
 
 const CustomerList = () => {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  // Stav pro otevření/zavření modálu
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Funkce pro načtení dat
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -30,38 +31,32 @@ const CustomerList = () => {
     fetchData();
   }, []);
 
-  // Funkce, která se zavolá, když se úspěšně vytvoří zákazník
   const handleCustomerCreated = () => {
-    fetchData(); // Znovu načti tabulku, ať vidíme nového zákazníka
+    fetchData();
   };
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800">Zákazníci</h1>
-          <p className="text-slate-500 text-sm">Správa firem a kontaktů</p>
-        </div>
-        
-        {/* Tlačítko nyní otevírá modál */}
-        <button 
-          onClick={() => setIsModalOpen(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-sm"
-        >
-          <Plus size={20} />
-          Nový zákazník
-        </button>
-      </div>
+      <Header
+        title="Zákazníci"
+        subtitle="Správa firem a kontaktů"
+        actions={
+          <Button
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center gap-2"
+          >
+            <Plus size={20} />
+            Nový zákazník
+          </Button>
+        }
+      />
 
       <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex gap-4">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
-          <input 
-            type="text" 
-            placeholder="Hledat zákazníka..." 
-            className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-          />
-        </div>
+        <Input
+            placeholder="Hledat zákazníka..."
+            icon={Search}
+            containerClassName="flex-1 max-w-md"
+        />
       </div>
 
       {error && (
@@ -72,7 +67,6 @@ const CustomerList = () => {
 
       <CustomerTable customers={customers} loading={loading} />
 
-      {/* Zde vkládáme naše modální okno */}
       <CreateCustomerModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)}
