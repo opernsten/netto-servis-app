@@ -8,15 +8,12 @@ import { supabase } from '../api/supabaseClient';
 // 1. Získání všech zákazníků
 export const getCustomers = async () => {
   const { data, error } = await supabase
-    .from('customers')      // Z tabulky 'customers'
-    .select('*')            // Vyber všechny sloupce
-    .order('name');         // Seřaď podle abecedy
-  
-  if (error) {
-    console.error('Chyba při načítání zákazníků:', error);
-    throw error;
-  }
-  
+    .from('customers')
+    .select('*') // Bereme vše
+    .order('name', { ascending: true }); // Seřadíme podle jména
+
+  // TOTO PŘIDAT:
+  if (error) throw error;
   return data;
 };
 

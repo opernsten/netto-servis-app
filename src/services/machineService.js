@@ -9,14 +9,11 @@ import { supabase } from '../api/supabaseClient';
 export const getMachines = async () => {
   const { data, error } = await supabase
     .from('machines')
-    .select('*, customers(name, address)') // Tady děláme "JOIN" - vytáhneme i data zákazníka
-    .order('created_at', { ascending: false });
-  
-  if (error) {
-    console.error('Chyba při načítání strojů:', error);
-    throw error;
-  }
-  
+    .select('*, customers(name, address)') // Taháme i jméno zákazníka (pro jistotu)
+    .order('name', { ascending: true });
+
+  // TOTO JE DŮLEŽITÉ PRO REACT QUERY:
+  if (error) throw error;
   return data;
 };
 

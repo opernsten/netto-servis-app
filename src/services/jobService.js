@@ -9,21 +9,16 @@ import { supabase } from '../api/supabaseClient';
 export const getJobs = async () => {
   const { data, error } = await supabase
     .from('jobs')
-    .select(`
-      *,
-      customers (name, address)
-    `)
+    .select('*, customers(name, address)') // Přidáváme i jméno zákazníka
     .order('created_at', { ascending: false });
-  
+
   if (error) {
-    console.error('Chyba při načítání zakázek:', error);
-    throw error;
+    throw error; // <--- TOTO JE DŮLEŽITÉ PRO REACT QUERY
   }
   
-  return data;
+  return data; // <--- Vracíme rovnou pole, ne objekt { data, error }
 };
 
-// createJob upravíme později, až budeme dělat modál pro zakázky
 // Upravená funkce pro vytvoření zakázky s více stroji
 export const createJob = async (jobData, machineIds) => {
   // 1. Vytvoříme samotnou zakázku

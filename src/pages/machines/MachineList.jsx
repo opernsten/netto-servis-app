@@ -1,43 +1,55 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query'; // <--- NOVÝ IMPORT
 import { getMachines } from '../../services/machineService';
 import MachineTable from '../../features/machines/MachineTable';
 import CreateMachineModal from '../../modals/machines/CreateMachineModal';
-import { Wrench } from 'lucide-react';
 import Header from '../../components/layout/Header';
 import Button from '../../components/ui/Button';
+import { Wrench } from 'lucide-react'; // Nebo jiná ikona, kterou tam máš
 
 const MachineList = () => {
-  const [machines, setMachines] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Funkce pro načtení dat
-  const loadData = async () => {
-    setLoading(true);
-    try {
-      const data = await getMachines();
-      setMachines(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // --- REACT QUERY (Nový motor) ---
+  const { 
+    data: machines = [], 
+    isLoading, 
+    isError, 
+    error,
+    refetch 
+  } = useQuery({
+    queryKey: ['machines'],
+    queryFn: getMachines,
+    staleTime: 1000 * 60 * 5 // 5 minut cache
+  });
 
-  useEffect(() => {
-    loadData();
-  }, []);
+  // --- UI PRO NAČÍTÁNÍ A CHYBY ---
+
+  if (isLoading) {
+    return <div className="p-10 text-center text-slate-500">Načítám seznam strojů...</div>;
+  }
+
+  if (isError) {
+    return (
+      <div className="p-10 text-center text-red-500">
+        Chyba při načítání strojů: {error.message}
+        <br />
+        <button onClick={() => refetch()} className="underline mt-2">Zkusit znovu</button>
+      </div>
+    );
+  }
+
+  // --- HLAVNÍ OBSAH ---
 
   return (
     <div className="space-y-6">
       <Header
-        title="Stroje"
-        subtitle="Evidence servisovaných zařízení"
+        title="Databáze strojů"
+        subtitle="Správa všech zařízení a jejich historie"
         actions={
           <Button
             onClick={() => setIsModalOpen(true)}
-            variant="primary"
-            className="flex items-center gap-2"
+            className="bg-blue-600 hover:bg-blue-700 flex items-center gap-2"
           >
             <Wrench size={18} />
             Nový stroj
@@ -45,12 +57,17 @@ const MachineList = () => {
         }
       />
 
-      <MachineTable machines={machines} loading={loading} />
+      {/* Tabulka */}
+      <MachineTable machines={machines} />
 
-      <CreateMachineModal 
+      {/* Modal pro nový stroj */}
+      <CreateMachineModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSuccess={loadData}
+        onSuccess={() => {
+          refetch(); // <--- Aktualizace seznamu po přidání
+          setIsModalOpen(false);
+        }}
       />
     </div>
   );

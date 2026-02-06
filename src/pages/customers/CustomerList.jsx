@@ -1,39 +1,46 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query'; // <--- NOVÝ IMPORT
 import { getCustomers } from '../../services/customerService';
 import CustomerTable from '../../features/customers/CustomerTable';
 import CreateCustomerModal from '../../modals/customers/CreateCustomerModal';
-import { Plus, Search } from 'lucide-react';
+import { Plus, Search } from 'lucide-react'; // Zachovány tvé ikony
 import Header from '../../components/layout/Header';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 
 const CustomerList = () => {
-  const [customers, setCustomers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      const data = await getCustomers();
-      setCustomers(data);
-    } catch (err) {
-      setError('Nepodařilo se načíst zákazníky.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // --- REACT QUERY (Nový motor) ---
+  const { 
+    data: customers = [], 
+    isLoading, 
+    isError, 
+    error,
+    refetch 
+  } = useQuery({
+    queryKey: ['customers'],
+    queryFn: getCustomers,
+    staleTime: 1000 * 60 * 10 // 10 minut cache
+  });
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // --- UI PRO NAČÍTÁNÍ A CHYBY ---
 
-  const handleCustomerCreated = () => {
-    fetchData();
-  };
+  if (isLoading) {
+    return <div className="p-10 text-center text-slate-500">Načítám adresář zákazníků...</div>;
+  }
+
+  if (isError) {
+    return (
+      <div className="p-10 text-center text-red-500">
+        Chyba při načítání zákazníků: {error.message}
+        <br />
+        <button onClick={() => refetch()} className="underline mt-2">Zkusit znovu</button>
+      </div>
+    );
+  }
+
+  // --- HLAVNÍ OBSAH (Zachován tvůj layout) ---
 
   return (
     <div className="space-y-6">
@@ -51,6 +58,7 @@ const CustomerList = () => {
         }
       />
 
+      {/* Vyhledávací pole (Zachováno z tvého kódu) */}
       <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex gap-4">
         <Input
             placeholder="Hledat zákazníka..."
@@ -59,18 +67,17 @@ const CustomerList = () => {
         />
       </div>
 
-      {error && (
-        <div className="bg-red-50 text-red-600 p-4 rounded-lg">
-          {error}
-        </div>
-      )}
+      {/* Tabulka */}
+      <CustomerTable customers={customers} />
 
-      <CustomerTable customers={customers} loading={loading} />
-
-      <CreateCustomerModal 
-        isOpen={isModalOpen} 
+      {/* Modal pro nového zákazníka */}
+      <CreateCustomerModal
+        isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSuccess={handleCustomerCreated}
+        onSuccess={() => {
+          refetch(); // <--- Aktualizace po vytvoření
+          setIsModalOpen(false);
+        }}
       />
     </div>
   );

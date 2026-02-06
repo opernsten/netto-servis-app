@@ -18,17 +18,7 @@ import ActiveJobList from '../features/dashboard/ActiveJobList';
 
 const Dashboard = () => {
 
-  // --- STARÝ KÓD (Smaž nebo zakomentuj) ---
-  /*
-  const [data, setData] = useState(...);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-     ...
-  }, []);
-  */
-
-  // --- NOVÝ KÓD (React Query) ---
+  // --- CACHE NAČÍTÁNÍ (React Query) ---
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['dashboard-stats'], // Unikátní klíč pro cache
     queryFn: getDashboardStats,    // Funkce, která stahuje data
@@ -63,8 +53,8 @@ const Dashboard = () => {
       {/* NADPIS */}
       <div className="mb-8 flex justify-between items-end">
         <div>
-           <h1 className="text-3xl font-bold text-slate-800">Velín</h1>
-           <p className="text-slate-500 mt-1">Přehled servisu a kritických úkolů</p>
+           <h1 className="text-3xl font-bold text-slate-800">Přehled</h1>
+           <p className="text-slate-500 mt-1">Statistika servisu a kritických úkolů</p>
         </div>
         {/* Malý indikátor, že je to živé */}
         <div className="text-xs text-slate-400 font-mono hidden md:block">
