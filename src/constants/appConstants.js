@@ -80,6 +80,7 @@ export const APP_SUBTITLE = 'Servisní systém';
 
 export const SIDEBAR_NAV_LINKS = [
     { to: '/', label: 'Přehled' },
+    { to: '/calendar', label: 'Plánování' },
     { to: '/customers', label: 'Zákazníci' },
     { to: '/machines', label: 'Stroje' },
     { to: '/jobs', label: 'Zakázky' }

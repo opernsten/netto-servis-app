@@ -11,6 +11,7 @@ import JobDetail from './pages/jobs/JobDetail';
 import MachineDetail from './pages/machines/MachineDetail';
 import OfflineNotification from './components/ui/OfflineNotification';
 import CustomerDetail from './pages/customers/CustomerDetail';
+import CalendarPage from './pages/calendar/CalendarPage';
 
 function App() {
   const { user } = useAuth();
@@ -31,6 +32,7 @@ function App() {
     <PageLayout>
       <Routes>
         <Route path="/" element={<Dashboard />} />
+        <Route path="/calendar" element={<CalendarPage />} />
         <Route path="/customers" element={<CustomerList />} />
         <Route path="/machines" element={<MachineList />} />
         <Route path="/jobs" element={<JobList />} />

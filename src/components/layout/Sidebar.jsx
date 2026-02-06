@@ -7,11 +7,12 @@
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, Wrench, FileText } from 'lucide-react';
+import { LayoutDashboard, Users, Wrench, FileText, Calendar } from 'lucide-react';
 import { APP_TITLE, APP_SUBTITLE, SIDEBAR_NAV_LINKS, PLACEHOLDER_USER } from '../../constants/appConstants';
 
 const navIcons = {
   '/': <LayoutDashboard size={20} />,
+  '/calendar': <Calendar size={20} />,
   '/customers': <Users size={20} />,
   '/machines': <Wrench size={20} />,
   '/jobs': <FileText size={20} />,
