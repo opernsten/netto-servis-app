@@ -4,8 +4,9 @@ import { formatDate } from '../../utils/dateUtils';
 import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
 import { JOB_STATUS_COLORS } from '../../constants/appConstants';
+import JobStatus from './Jobstatus';
 
-const JobDetailHeader = ({ job }) => {
+const JobDetailHeader = ({ job, setJob }) => {
   return (
     <Card className="p-6 relative overflow-hidden">
 
@@ -27,9 +28,11 @@ const JobDetailHeader = ({ job }) => {
           <div>
             <div className="flex items-center gap-3 mb-2">
               <span className="font-mono text-lg font-bold text-slate-700 bg-slate-100 px-3 py-1 rounded">{job.job_number}</span>
-              <Badge variant={JOB_STATUS_COLORS[job.status] || 'neutral'}>
-                {job.status.toUpperCase()}
-              </Badge>
+              {/*ZMĚNA STAVU ZAKÁZKY*/}
+              <JobStatus 
+                job={job} 
+                onStatusChange={(newStatus) => setJob(prev => ({ ...prev, status: newStatus }))} 
+              />
             </div>
             <h1 className="text-2xl font-bold text-slate-900">{job.title}</h1>
           </div>

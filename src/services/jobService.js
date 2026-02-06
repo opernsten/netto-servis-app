@@ -57,8 +57,6 @@ export const createJob = async (jobData, machineIds) => {
   return job;
 };
 
-// ... existující kód ...
-
 // 3. Získání detailu jedné zakázky (včetně zákazníka a strojů)
 export const getJobById = async (id) => {
   const { data, error } = await supabase

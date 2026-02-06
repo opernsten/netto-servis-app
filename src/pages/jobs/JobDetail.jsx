@@ -60,7 +60,7 @@ const JobDetail = () => {
         {/* Tlačítka pro HOTOVÉ zakázky */}
         {job.status === 'hotovo' && (
           <div className="flex gap-2">
-            
+
             {/* NOVÉ TLAČÍTKO: Náhled */}
             <Button variant="secondary" onClick={() => setIsPreviewOpen(true)}>
                 <Eye size={18} />
@@ -75,8 +75,11 @@ const JobDetail = () => {
         )}
     </div>
 
-      {/* HLAVIČKA */}
-      <JobDetailHeader job={job} />
+      {/* HLAVIČKA KARTY */}
+      <JobDetailHeader 
+        job={job} 
+        setJob={setJob}  
+      />
 
       {/* SEZNAM STROJŮ A JEJICH REPORTY */}
       <JobMachineList
