@@ -129,6 +129,7 @@ const JobDetail = () => {
           machineName={selectedMachine.name}
           jobMachineId={selectedMachine.link_id}    
           initialReport={selectedMachine.report}
+          initialParts={selectedMachine.parts}
         />
       )}
 

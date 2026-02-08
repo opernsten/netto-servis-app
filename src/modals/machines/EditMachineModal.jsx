@@ -43,31 +43,25 @@ const EditMachineModal = ({ isOpen, onClose, onSuccess, machine }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
-
-      const updates = { ...formData };
-
-      console.log("PŘED ČIŠTĚNÍM:", updates);
-
-      // 2. ČIŠTĚNÍ DAT: Pokud je datum prázdný řetězec "", změníme ho na null
-      if (updates.last_verified === "") {
-        updates.last_verified = null;
-      }
+      // --- OPRAVA ZDE ---
+      // Vytvoříme kopii dat a "vyčistíme" prázdné stringy na null
+      const cleanedData = {
+        ...formData,
+        initial_verification: formData.initial_verification === '' ? null : formData.initial_verification,
+        last_verified: formData.last_verified === '' ? null : formData.last_verified,
+        manufacturing_year: formData.manufacturing_year === '' ? null : formData.manufacturing_year
+      };
       
-      // Pro jistotu ošetříme i datum instalace, pokud tam je
-      if (updates.initial_verification === "") {
-        updates.initial_verification = null;
-      }
-
-      console.log("ODESÍLÁM TOTO:", updates);
-
-      await updateMachine(machine.id, formData);
-      console.log("Úspěšně uloženo!");
+      // Posíláme cleanedData místo formData
+      await updateMachine(machine.id, cleanedData);
+      
       onSuccess();
       onClose();
-    } catch (err) {
-      console.error(err);
-      alert('Chyba při ukládání.');
+    } catch (error) {
+      console.error('Chyba při úpravě stroje:', error);
+      alert('Chyba při ukládání: ' + error.message);
     } finally {
       setLoading(false);
     }

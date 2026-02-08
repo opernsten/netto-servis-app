@@ -20,7 +20,8 @@ const JobList = () => {
   } = useQuery({
     queryKey: ['jobs'],     // Klíč pro cache
     queryFn: getJobs,       // Funkce pro stažení
-    staleTime: 1000 * 60 * 5 // 5 minut cache
+    staleTime: 0,
+    refetchOnWindowFocus: true // 5 minut cache
   });
 
   // --- PODMÍNKY PRO NAČÍTÁNÍ A CHYBU ---

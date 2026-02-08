@@ -1,11 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Wrench, Hash, MapPin, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Wrench, Hash, MapPin, CheckCircle, AlertTriangle, Ban } from 'lucide-react'; // Přidán Ban
 import { Link } from 'react-router-dom';
 
 const MachineTable = ({ machines, loading }) => {
   if (loading) return <div className="p-8 text-center text-slate-500">Načítám stroje...</div>;
   if (!machines?.length) return <div className="p-8 text-center text-slate-500">Zatím žádné stroje.</div>;
+
+  // Funkce pro vykreslení štítku podle stavu
+  const getStatusBadge = (status) => {
+    if (status === 'ok') {
+      return (
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            <CheckCircle size={12} /> OK
+        </span>
+      );
+    } else if (status === 'odstaveno') {
+      return (
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
+            <Ban size={12} /> Odstaveno
+        </span>
+      );
+    } else {
+      return (
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+            <AlertTriangle size={12} /> Servis
+        </span>
+      );
+    }
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
@@ -22,16 +45,17 @@ const MachineTable = ({ machines, loading }) => {
           {machines.map((machine) => (
             <tr key={machine.id} className="hover:bg-slate-50 transition-colors">
               <td className="px-6 py-4">
-                <div className="flex items-center gap-3">
-                  <div className="bg-slate-100 p-2 rounded-lg text-slate-600">
-                    <Wrench size={20} />
+                <Link to={`/machines/${machine.id}`} className="font-medium text-slate-900 hover:text-blue-600 flex items-center gap-2">
+                  <div className="bg-blue-50 p-2 rounded-lg text-blue-600">
+                    <Wrench size={18} />
                   </div>
-                  <Link to={`/machines/${machine.id}`} className="font-medium text-slate-900 hover:text-blue-600 hover:underline">
-                    {machine.name}
-                  </Link>
-                </div>
+                  <div>
+                    <div>{machine.name}</div>
+                    <div className="text-xs text-slate-500 font-normal">{machine.type}</div>
+                  </div>
+                </Link>
               </td>
-              
+
               <td className="px-6 py-4 text-sm text-slate-600 font-mono">
                 <div className="flex items-center gap-2">
                     <Hash size={14} />
@@ -50,15 +74,8 @@ const MachineTable = ({ machines, loading }) => {
               </td>
 
               <td className="px-6 py-4">
-                {machine.status === 'ok' ? (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                        <CheckCircle size={12} /> OK
-                    </span>
-                ) : (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                        <AlertTriangle size={12} /> Servis
-                    </span>
-                )}
+                {/* Zde voláme novou funkci místo původní podmínky */}
+                {getStatusBadge(machine.status)}
               </td>
             </tr>
           ))}

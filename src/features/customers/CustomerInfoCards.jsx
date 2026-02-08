@@ -20,7 +20,7 @@ const CustomerInfoCards = ({ customer }) => {
                             </div>
                             <div>
                                 <p className="text-xs text-slate-500 font-bold uppercase">Telefon</p>
-                                <p className="text-sm font-bold text-slate-800 group-hover:text-blue-700 transition-colors">{customer.phone || '—'}</p>
+                                <p className="text-sm font-bold text-slate-800 group-hover:text-blue-700 transition-colors">{customer.phone || 'Nevyplněno'}</p>
                             </div>
                         </a>
                         <a href={`mailto:${customer.email}`} className="flex items-center gap-4">
@@ -29,7 +29,7 @@ const CustomerInfoCards = ({ customer }) => {
                             </div>
                             <div>
                                 <p className="text-xs text-slate-500 font-bold uppercase">Email</p>
-                                <p className="text-sm font-bold text-slate-800 group-hover:text-purple-700 transition-colors break-all">{customer.email || '—'}</p>
+                                <p className="text-sm font-bold text-slate-800 group-hover:text-purple-700 transition-colors break-all">{customer.email || 'Nevyplněno'}</p>
                             </div>
                         </a>
                     </div>
@@ -43,11 +43,11 @@ const CustomerInfoCards = ({ customer }) => {
                     <div className="space-y-4">
                         <div className="flex justify-between items-center bg-slate-50 p-3 rounded-lg border border-slate-200">
                             <span className="text-xs font-bold text-slate-600 uppercase">IČO</span>
-                            <span className="font-mono text-sm font-bold text-slate-900">{customer.ico || '-'}</span>
+                            <span className="font-mono text-sm font-bold text-slate-900">{customer.ico || 'Nevyplněno'}</span>
                         </div>
                         <div className="flex justify-between items-center bg-slate-50 p-3 rounded-lg border border-slate-200">
                             <span className="text-xs font-bold text-slate-600 uppercase">DIČ</span>
-                            <span className="font-mono text-sm font-bold text-slate-900">{customer.dic || '-'}</span>
+                            <span className="font-mono text-sm font-bold text-slate-900">{customer.dic || 'Nevyplněno'}</span>
                         </div>
                     </div>
                 </Card>
@@ -64,8 +64,8 @@ const CustomerInfoCards = ({ customer }) => {
                                 <User size={18} />
                             </div>
                             <div>
-                                <p className="text-[10px] uppercase text-slate-500 font-bold leading-none mb-1">Klient</p>
-                                <p className="text-sm font-bold text-slate-800">{customer.contact_person || '—'}</p>
+                                <p className="text-[10px] uppercase text-slate-500 font-bold leading-none mb-1">Kontaktní osoba</p>
+                                <p className="text-sm font-bold text-slate-800">{customer.contact_person || 'Nevyplněno'}</p>
                             </div>
                         </div>
                         {/* IKONA KOUČE */}
@@ -75,7 +75,7 @@ const CustomerInfoCards = ({ customer }) => {
                             </div>
                             <div>
                                 <p className="text-[10px] uppercase text-slate-500 font-bold leading-none mb-1">Náš kouč</p>
-                                <p className="text-sm font-bold text-slate-800">{customer.internal_coach || '—'}</p>
+                                <p className="text-sm font-bold text-slate-800">{customer.internal_coach || 'Nevyplněno'}</p>
                             </div>
                         </div>
                     </div>
@@ -90,7 +90,7 @@ const CustomerInfoCards = ({ customer }) => {
                         <div className="mt-0.5 text-yellow-600"><FileText size={20}/></div>
                         <div className="space-y-1">
                             <p className="text-xs font-bold text-yellow-700 uppercase">Interní poznámka</p>
-                            <p className="text-sm italic leading-relaxed text-slate-800">{customer.notes}</p>
+                            <p className="text-sm italic leading-relaxed text-slate-800">{customer.notes || 'Bez poznámky'}</p>
                         </div>
                     </div>
                 </div>

@@ -6,7 +6,6 @@
         - Odhlašovací a přihlašovací systém = auto odhlášení po ukončení aplikace, předělat design přihlašování
         - Roztřídit kody do ruznych funkcí a souborů ---> částečně dokončeno
         - dodělat částečné loudování listů v tabech (max 50 listu na stranku) = kvůli budoucímu zasekávání, když tam přibude více věcí === PAGINACE (STRÁNKOVÁNÍ)
-        - Přidat funkci kalendáře pro termíny výjezdů, termíny následného ověření stroje, termíny klasických záručních servisů apod.
 
 
 

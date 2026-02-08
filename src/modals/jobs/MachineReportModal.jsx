@@ -1,27 +1,33 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types'; // Pokud používáš PropTypes
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import Modal from '../../components/ui/Modal';
-import { updateMachineReport } from '../../services/jobService'; // <--- Tady voláme tvůj jobService
+import { updateMachineReport } from '../../services/jobService';
 import { Plus, Trash2, Box } from 'lucide-react';
 
-const MachineReportModal = ({ isOpen, onClose, onSuccess, jobMachineId, machineName, initialReport = '' }) => {
+// Přidali jsme prop 'initialParts'
+const MachineReportModal = ({ isOpen, onClose, onSuccess, jobMachineId, machineName, initialReport = '', initialParts = [] }) => {
   const [loading, setLoading] = useState(false);
-  const [report, setReport] = useState(initialReport || '');
-  
-  // Seznam náhradních dílů
+  const [report, setReport] = useState('');
   const [parts, setParts] = useState([]);
 
-  // Přidání řádku pro díl
+  // --- OPRAVA: NAČTENÍ DAT PŘI OTEVŘENÍ ---
+  useEffect(() => {
+    if (isOpen) {
+      setReport(initialReport || '');
+      // Pokud existují předchozí díly, načteme je, jinak prázdné pole
+      setParts(initialParts || []);
+    }
+  }, [isOpen, initialReport, initialParts]);
+  // ----------------------------------------
+
   const addPart = () => {
     setParts([...parts, { article_number: '', description: '', quantity: 1 }]);
   };
 
-  // Smazání dílu
   const removePart = (index) => {
     setParts(parts.filter((_, i) => i !== index));
   };
 
-  // Psaní do políček dílů
   const handlePartChange = (index, field, value) => {
     const newParts = [...parts];
     newParts[index][field] = value;
@@ -32,7 +38,6 @@ const MachineReportModal = ({ isOpen, onClose, onSuccess, jobMachineId, machineN
     e.preventDefault();
     setLoading(true);
     try {
-      // Posíláme ID, text reportu A TAKÉ seznam dílů
       await updateMachineReport(jobMachineId, report, parts);
       onSuccess();
       onClose();
@@ -63,7 +68,7 @@ const MachineReportModal = ({ isOpen, onClose, onSuccess, jobMachineId, machineN
 
         <hr className="border-slate-100" />
 
-        {/* 2. NÁHRADNÍ DÍLY (Volitelné) */}
+        {/* 2. NÁHRADNÍ DÍLY */}
         <div>
            <div className="flex justify-between items-center mb-3">
               <label className="block text-sm font-bold text-slate-700 flex items-center gap-2">
@@ -120,7 +125,6 @@ const MachineReportModal = ({ isOpen, onClose, onSuccess, jobMachineId, machineN
            )}
         </div>
 
-        {/* TLAČÍTKA */}
         <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
           <button type="button" onClick={onClose} className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg">Zrušit</button>
           <button type="submit" disabled={loading} className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium shadow-sm">
@@ -138,7 +142,8 @@ MachineReportModal.propTypes = {
   onSuccess: PropTypes.func,
   jobMachineId: PropTypes.string,
   machineName: PropTypes.string,
-  initialReport: PropTypes.string
+  initialReport: PropTypes.string,
+  initialParts: PropTypes.array // Přidáno do PropTypes
 };
 
 export default MachineReportModal;

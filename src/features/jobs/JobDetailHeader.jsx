@@ -37,7 +37,7 @@ const JobDetailHeader = ({ job, setJob }) => {
             <h1 className="text-2xl font-bold text-slate-900">{job.title}</h1>
           </div>
           <div className="text-right pr-12">
-             <div className="text-sm text-slate-500 mb-1">Termín</div>
+             <div className="text-sm text-slate-500 mb-1">Termín výjezdu</div>
              <div className="flex items-center gap-2 font-medium text-slate-800 justify-end">
                 <Calendar size={18} className="text-blue-600"/> {formatDate(job.scheduled_date)}
              </div>

@@ -16,7 +16,7 @@ const CalendarPage = () => {
   } = useQuery({
     queryKey: ['calendar-events'],
     queryFn: getCalendarEvents,
-    staleTime: 1000 * 60 * 5,
+    refetchInterval: 5000, // Automatické aktualizace každých 5 sekund
   });
 
   // 2. Kliknutí na událost

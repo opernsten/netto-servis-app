@@ -21,8 +21,9 @@ const Dashboard = () => {
   // --- CACHE NAČÍTÁNÍ (React Query) ---
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['dashboard-stats'], // Unikátní klíč pro cache
-    queryFn: getDashboardStats,    // Funkce, která stahuje data
-    refetchInterval: 30000,        // Automatický refresh každých 30s (volitelné)
+    queryFn: getDashboardStats,
+    staleTime: 0,    // Funkce, která stahuje data
+    refetchOnWindowFocus: true        // Automatický refresh každých 30s (volitelné)
   });
 
   // Pokud se načítá
