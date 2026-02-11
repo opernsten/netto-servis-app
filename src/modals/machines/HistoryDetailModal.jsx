@@ -30,8 +30,8 @@ const HistoryDetailModal = ({ isOpen, onClose, entry }) => {
         {/* HLAVIČKA */}
         <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 grid grid-cols-2 gap-4">
             <div>
-                <div className="text-xs text-slate-500 flex items-center gap-1 mb-1"><Calendar size={12}/> Datum</div>
-                <div className="font-bold text-slate-800">{formatDate(entry.created_at)}</div>
+                <div className="text-xs text-slate-500 flex items-center gap-1 mb-1"><Calendar size={12}/> Datum výjezdu</div>
+                <div className="font-bold text-slate-800">{formatDate(entry.jobs.scheduled_date)}</div>
             </div>
             <div>
                 <div className="text-xs text-slate-500 flex items-center gap-1 mb-1"><Wrench size={12}/> Zakázka</div>

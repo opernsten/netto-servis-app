@@ -34,7 +34,7 @@ const CustomerJobList = ({ jobs }) => {
                                     {job.job_number}
                                     </span>
                             </td>
-                            <td className="px-6 py-5 text-slate-500 font-medium">{formatDate(job.created_at)}</td>
+                            <td className="px-6 py-5 text-slate-500 font-medium">{formatDate(job.scheduled_date)}</td>
                             <td className="px-6 py-5">
                                 <span className={`px-2.5 py-1 rounded-md text-xs font-bold shadow-sm border ${
                                     job.status === 'hotovo' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' :

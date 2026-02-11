@@ -23,7 +23,7 @@ const MachineHistoryList = ({ history, onSelectEntry }) => {
                                     {entry.jobs?.job_number}
                                 </span>
                                 <span className="text-xs text-slate-400">
-                                    {formatDate(entry.created_at)}
+                                    {formatDate(entry.jobs.scheduled_date)}
                                 </span>
                             </div>
 
