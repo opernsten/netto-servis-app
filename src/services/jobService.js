@@ -5,18 +5,23 @@
 
 import { supabase } from '../api/supabaseClient';
 
-// 1. Získání všech zakázek (včetně jmen zákazníka a stroje)
-export const getJobs = async () => {
-  const { data, error } = await supabase
+// 1. Získání zakázek se stránkováním
+export const getJobs = async (page = 1, limit = 20) => {
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  const { data, error, count } = await supabase
     .from('jobs')
-    .select('*, customers(name, address)') // Přidáváme i jméno zákazníka
+    .select('*, customers(name, address)', { count: 'exact' }) // Přidáno počítání
+    .range(from, to) // Přidán rozsah
     .order('created_at', { ascending: false });
 
   if (error) {
-    throw error; // <--- TOTO JE DŮLEŽITÉ PRO REACT QUERY
+    throw error;
   }
   
-  return data; // <--- Vracíme rovnou pole, ne objekt { data, error }
+  // Vracíme objekt s daty a celkovým počtem
+  return { data, count };
 };
 
 // Upravená funkce pro vytvoření zakázky s více stroji

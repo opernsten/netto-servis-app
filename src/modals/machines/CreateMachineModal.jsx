@@ -154,7 +154,7 @@ const CreateMachineModal = ({ isOpen, onClose, onSuccess }) => {
             value={formData.name}
             onChange={handleChange}
             className="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-            placeholder="Např. Linka 1"
+            placeholder="Např. HC_M"
           />
         </div>
 
