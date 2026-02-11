@@ -6,15 +6,27 @@
 import { supabase } from '../api/supabaseClient';
 
 // 1. Získání všech strojů (včetně jména zákazníka)
-export const getMachines = async () => {
-  const { data, error } = await supabase
-    .from('machines')
-    .select('*, customers(name, address)') // Taháme i jméno zákazníka (pro jistotu)
-    .order('name', { ascending: true });
+// Upravená funkce pro stránkování
+export const getMachines = async (page = 1, limit = 20) => {
+  // Spočítáme rozsah řádků (např. 0-19 pro první stránku)
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
 
-  // TOTO JE DŮLEŽITÉ PRO REACT QUERY:
-  if (error) throw error;
-  return data;
+  const { data, error, count } = await supabase
+    .from('machines')
+    .select(`
+      *,
+      customers (name, address)
+    `, { count: 'exact' }) // "count: exact" nám vrátí celkový počet řádků v DB
+    .range(from, to)       // ".range" ořízne data jen na požadovanou stránku
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    throw error;
+  }
+  
+  // Vracíme objekt: data (20 strojů) a count (celkový počet, např. 500)
+  return { data, count };
 };
 
 // 2. Vytvoření stroje
